@@ -386,6 +386,7 @@ public class Main extends Lifecycle implements PushCallback {
     @Override
     public void registeredForPush(String deviceID) {
         log("this device was registered");
+        //USE PUSH.PUSHID
         //TODO: register new devices with the server
         //ServerScraper.registerForPush(deviceID);
     }
@@ -395,3 +396,5 @@ public class Main extends Lifecycle implements PushCallback {
 
     }
 }
+
+
