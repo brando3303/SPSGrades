@@ -1,0 +1,115 @@
+{
+    "courses": [
+        {
+            "period": 1,
+            "courseInfo": {
+                "name": "AP CALCULUS AB A",
+                "teacher": "Miller, Judson J",
+                "room": 335
+            },
+            "semester1Grade": {
+                "letter": "A",
+                "percent": "99"
+            },
+            "absences": 0,
+            "tardies": 0,
+            "frn": "00461274476"
+        },
+        {
+            "period": 2,
+            "courseInfo": {
+                "name": "SPANISH 3A",
+                "teacher": "Ahlstrom, Erika R",
+                "room": 127
+            },
+            "semester1Grade": {
+                "letter": "A",
+                "percent": "98"
+            },
+            "absences": 0,
+            "tardies": 0,
+            "frn": "00461268693"
+        },
+        {
+            "period": 3,
+            "courseInfo": {
+                "name": "ETH STUDIES US HIST 11A",
+                "teacher": "Macdonald, Kara K",
+                "room": 207
+            },
+            "semester1Grade": {
+                "letter": "A",
+                "percent": "100"
+            },
+            "absences": 0,
+            "tardies": 0,
+            "frn": "00461665561"
+        },
+        {
+            "period": 4,
+            "courseInfo": {
+                "name": "SYMPHONY ORCHESTRA A",
+                "teacher": "Gero, Christine E",
+                "room": 151
+            },
+            "semester1Grade": null,
+            "absences": 0,
+            "tardies": 0,
+            "frn": null
+        },
+        {
+            "period": 5,
+            "courseInfo": {
+                "name": "CSE 142 AP COMP SCI A1",
+                "teacher": "Walseth, John S",
+                "room": 319
+            },
+            "semester1Grade": {
+                "letter": "A",
+                "percent": "100"
+            },
+            "absences": 0,
+            "tardies": 0,
+            "frn": "00461274470"
+        },
+        {
+            "period": 6,
+            "courseInfo": {
+                "name": "AP ENG LANG COMP 1",
+                "teacher": "Karl, Adam",
+                "room": 323
+            },
+            "semester1Grade": {
+                "letter": "A",
+                "percent": "100"
+            },
+            "absences": 0,
+            "tardies": 0,
+            "frn": "00461274474"
+        },
+        {
+            "period": 11,
+            "courseInfo": {
+                "name": "SCHOOL COUNSELOR HS",
+                "teacher": "Richard, Carrie L",
+                "room": 105
+            },
+            "semester1Grade": null,
+            "absences": 0,
+            "tardies": 0,
+            "frn": null
+        },
+        {
+            "period": 12,
+            "courseInfo": {
+                "name": "WIAA CROSS COUNTRY",
+                "teacher": "Sherlock, Ryan P",
+                "room": 162
+            },
+            "semester1Grade": null,
+            "absences": 0,
+            "tardies": 0,
+            "frn": null
+        }
+    ]
+}

@@ -1,0 +1,138 @@
+/** Define Theme Constants here */
+#Constants {
+    includeNativeBool: true;
+    defaultSourceDPIInt: "0";
+    --paletteDarkBlue: #FAFAFA;
+    --paletteLightBlue: #E3F2FD;
+    --paletteGreen: #DB5461;
+    --paletteRed: #686963;
+    --paletteOrange: #8AA29E;
+}
+
+Form{
+    background-color: black;
+    color: var(--paletteOrange);
+
+}
+
+/** Style for Button class */
+Button {
+    font-family: "native:MainLight";
+    font-size: 3mm;
+}
+
+/** Style for App Title Bar Text */
+Title {
+    text-align: center;
+    font-size: 4mm;
+    font-family: "native:MainLight";
+}
+
+/** Style for Dialog body */
+DialogBody {
+    font-family: "native:MainLight";
+    font-size: 2.8mm;
+}
+
+RoundBorder.unselected{
+    border: 4px cn1-pill-border;
+    border-color: var(--paletteDarkBlue);
+    text-align:left;
+    margin:1mm;
+    padding:3mm;
+    color: var(--paletteGreen);
+}
+
+RoundBorder.selected {
+
+    border: 4px cn1-pill-border;
+    background: var(--paletteDarkBlue);
+    text-align:left;
+    margin:1mm;
+    padding:3mm;
+}
+
+
+/** Style for Dialog title bar text */
+DialogTitle {
+    font-family: "native:MainLight";
+    font-size: 4.5mm;
+}
+
+/** Style for the side menu */
+SideNavigationPanel {
+    background: white;
+    padding: 2mm 1mm 1mm 1mm;
+}
+
+@media platform-ios {
+    /** iOS Only styles for side menu. */
+    SideNavigationPanel {
+        /** Extra top padding to deal with notch on iPhoneX */
+        padding: 6mm 1mm 1mm 1mm;
+    }
+}
+
+/** Style for commands in side menu. */
+SideCommand {
+    padding: 1mm;
+    border: none;
+    text-decoration: none;
+    color: black;
+    font-family: "native:MainLight";
+    font-size: 4mm;
+    border-bottom: 2px solid #cccccc;
+}
+
+LetterGrade{
+    font-size: 5mm;
+    text-align: center;
+    margin: 0mm;
+    padding: 0mm;
+}
+
+Percent{
+    text-align: center;
+    margin: 0mm;
+    padding: 0mm;
+    font-family: "native:MainLight";
+    font-size: 2.5mm;
+}
+
+CourseName{
+    font-size: 3mm;
+    text-align: left;
+    color: grey;
+}
+
+Period{
+    text-align: left;
+    font-family: "native:MainLight";
+    font-size: 2mm;
+    margin: 0mm 0mm 0mm 0mm;
+    padding: 0mm;
+
+}
+
+GradeGrid{
+    background: var(--paletteDarkBlue);
+    border-radius: 2.5mm;
+    padding: 0mm 1mm 0mm 1mm;
+}
+
+GradePercentV{
+    margin: 0mm;
+    padding: 1mm;
+
+}
+
+SignInWarning{
+    font-align: center;
+    color: white;
+    font-size: 3mm;
+}
+
+RememberCheck{
+    color: white;
+    background: grey;
+}
