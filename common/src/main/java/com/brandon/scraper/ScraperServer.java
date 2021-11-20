@@ -20,6 +20,7 @@ public class ScraperServer {
     private static final String GET_USER_FROM_DB = "https://the-source-scraper.herokuapp.com/get_user_from_db?username=USERNAME";
     private static final String DELETE_INBOX_ITEM = "https://the-source-scraper.herokuapp.com/delete_inbox_item?username=USERNAME&id=ID&undeleted=UNDELETED";
     private static final String CREATE_USER = "https://the-source-scraper.herokuapp.com/create_user"; //requires username and password arguments (username & pwd)
+    private static final String DEACTIVATE_USER = "https://the-source-scraper.herokuapp.com/deactivate_user"; //requires a username argument
     private static final String UPDATE_USER = "https://the-source-scraper.herokuapp.com/update_user"; //requires username arguments (username)
     private static final String SECRETKEY = "BEipdUg9yp";
 
@@ -163,6 +164,16 @@ public class ScraperServer {
         r.addArgument("username", student.getUsername());
         r.addArgument("id", item.index);
         log(NetworkManager.getInstance().isQueueIdle() ? "queue idle": "queue is not idle");
+        NetworkManager.getInstance().addToQueue(r);
+    }
+
+    public static void deactivateUser(Student student){
+        String link = StringUtil.replaceAll(DEACTIVATE_USER,"USERNAME",student.getUsername());
+        ConnectionRequest r = new ConnectionRequest();
+        r.setPost(true);
+        r.setUrl(link);
+        r.addArgument("username", student.getUsername());
+        log("deactivating user");
         NetworkManager.getInstance().addToQueue(r);
     }
 }

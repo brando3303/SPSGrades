@@ -27,9 +27,12 @@ public class Main extends Lifecycle implements PushCallback {
     @Override
     public void runApp() {
 
+
+
         Form loading = new Form();
         loading.show();
 
+        Display.getInstance().registerPush();
         //encrypts all data stored, and is just simple but effective layer of protect from who knows
         //EncryptedStorage.install("BrandonEvan");
 
@@ -337,24 +340,28 @@ public class Main extends Lifecycle implements PushCallback {
                 log(ii.courseName);
                 Container c = new Container(new TableLayout(1, 2));
                 c.setUIID("GradeGrid");
-                c.add(new Label(ii.courseName));
-                Button delete = new Button(FontImage.MATERIAL_CLEAR);
 
+                Container selectableText = new Container();
                 Button selectInboxItem = new Button();
                 selectInboxItem.addActionListener(e -> {
                     log("you clicked on an inbox item!!!");
                     selectClass(ii.course);
 
                 });
+                selectableText.setLeadComponent(selectInboxItem);
 
-                c.setLeadComponent(selectInboxItem);
+                Button delete = new Button(FontImage.MATERIAL_CLEAR);
                 delete.addActionListener(e -> {
                     c.remove();
                     ScraperServer.deleteInboxItem(ii, currentUser);
                     inboxForm.show();
                 });
+
+                c.add(selectableText.add(new Label(ii.courseName)));
                 c.add(delete);
+
                 inboxForm.add(c);
+
             }
         }
     }
@@ -386,7 +393,8 @@ public class Main extends Lifecycle implements PushCallback {
     @Override
     public void registeredForPush(String deviceID) {
         log("this device was registered");
-        //USE PUSH.PUSHID
+        Dialog.show("congratulations!!", "you were registered for push notifications", "ok", null);
+        //USE Push.getPushKey()
         //TODO: register new devices with the server
         //ServerScraper.registerForPush(deviceID);
     }
