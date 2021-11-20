@@ -272,6 +272,9 @@ public class Main extends Lifecycle implements PushCallback {
     //called when the user is trying to sign out (from the grades form)
     private void signOut() {
         gradesForm.removeAll();
+        if(Connectivity.isConnected()) {
+            ScraperServer.deactivateUser(currentUser);
+        }
         currentUser = null;
         Storage.getInstance().deleteStorageFile("userpass");
         Storage.getInstance().deleteStorageFile("settings");

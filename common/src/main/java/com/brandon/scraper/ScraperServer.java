@@ -168,11 +168,12 @@ public class ScraperServer {
     }
 
     public static void deactivateUser(Student student){
-        String link = StringUtil.replaceAll(DEACTIVATE_USER,"USERNAME",student.getUsername());
+        String link = DEACTIVATE_USER;
         ConnectionRequest r = new ConnectionRequest();
         r.setPost(true);
         r.setUrl(link);
         r.addArgument("username", student.getUsername());
+        r.addArgument("secret", SECRETKEY);
         log("deactivating user");
         NetworkManager.getInstance().addToQueue(r);
     }
