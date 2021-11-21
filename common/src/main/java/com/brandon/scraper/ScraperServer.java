@@ -157,12 +157,13 @@ public class ScraperServer {
     }
 
     public static void deleteInboxItem(InboxItem item, Student student){
-        String link = StringUtil.replaceAll(StringUtil.replaceAll(DELETE_INBOX_ITEM,"USERNAME",student.getUsername()),"ID",item.index);
+        String link = DELETE_INBOX_ITEM;
         ConnectionRequest r = new ConnectionRequest();
         r.setPost(true);
         r.setUrl(link);
         r.addArgument("username", student.getUsername());
         r.addArgument("id", item.index);
+        r.addArgument("secret", SECRETKEY);
         log(NetworkManager.getInstance().isQueueIdle() ? "queue idle": "queue is not idle");
         NetworkManager.getInstance().addToQueue(r);
     }

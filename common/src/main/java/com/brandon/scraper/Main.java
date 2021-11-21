@@ -5,7 +5,6 @@ import com.codename1.components.InfiniteProgress;
 import com.codename1.components.SpanLabel;
 import com.codename1.components.Switch;
 import com.codename1.io.Storage;
-import com.codename1.push.PushCallback;
 import com.codename1.system.Lifecycle;
 import com.codename1.ui.*;
 import com.codename1.ui.layouts.BoxLayout;
@@ -14,8 +13,8 @@ import org.littlemonkey.connectivity.Connectivity;
 
 import static com.codename1.ui.CN.log;
 
-
-public class Main extends Lifecycle implements PushCallback {
+//needs to implement PushCallback
+public class Main extends Lifecycle {
     private Form gradesForm;
     private Form inboxForm;
     private Form signInForm;
@@ -356,7 +355,9 @@ public class Main extends Lifecycle implements PushCallback {
                 Button delete = new Button(FontImage.MATERIAL_CLEAR);
                 delete.addActionListener(e -> {
                     c.remove();
-                    ScraperServer.deleteInboxItem(ii, currentUser);
+                    if(Connectivity.isConnected()) {
+                        ScraperServer.deleteInboxItem(ii, currentUser);
+                    }
                     inboxForm.show();
                 });
 
@@ -378,34 +379,34 @@ public class Main extends Lifecycle implements PushCallback {
     }
 
 
-    @Override
-    public void push(String value) {
-        log("push: " + value);
-
-        //TODO: find out if this actually works
-        if (value.startsWith("@69")) {
-            for (Course sc : currentUser.courses) {
-                if (value.contains(sc.courseName)) {
-                    sc.createCoursePage();
-                    sc.getCoursePage().show();
-                }
-            }
-        }
-    }
-
-    @Override
-    public void registeredForPush(String deviceID) {
-        log("this device was registered");
-        Dialog.show("congratulations!!", "you were registered for push notifications", "ok", null);
-        //USE Push.getPushKey()
-        //TODO: register new devices with the server
-        //ServerScraper.registerForPush(deviceID);
-    }
-
-    @Override
-    public void pushRegistrationError(String s, int i) {
-
-    }
+//    @Override
+//    public void push(String value) {
+//        log("push: " + value);
+//
+//        //TODO: find out if this actually works
+//        if (value.startsWith("@69")) {
+//            for (Course sc : currentUser.courses) {
+//                if (value.contains(sc.courseName)) {
+//                    sc.createCoursePage();
+//                    sc.getCoursePage().show();
+//                }
+//            }
+//        }
+//    }
+//
+//    @Override
+//    public void registeredForPush(String deviceID) {
+//        log("this device was registered");
+//        Dialog.show("congratulations!!", "you were registered for push notifications", "ok", null);
+//        //USE Push.getPushKey()
+//        //TODO: register new devices with the server
+//        //ServerScraper.registerForPush(deviceID);
+//    }
+//
+//    @Override
+//    public void pushRegistrationError(String s, int i) {
+//
+//    }
 }
 
 
