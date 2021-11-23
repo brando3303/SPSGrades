@@ -38,6 +38,10 @@ public class Course {
 
     }
 
+    public static String getPercentString(Double total, Double points){
+        return (points == null) ? "NA" : Math.round((points/total)*10000)/100.0 + "%";
+    }
+
     //creates new form which contains the assignments for this class
     public Form createCoursePage(){
         classPage = new Form(courseName, BoxLayout.y());
@@ -51,7 +55,7 @@ public class Course {
             Label name = new Label(a.name);
             Label points = new Label(a.points != null ? "" + a.points : "NA");
             Label total = new Label("" + a.total);
-            Label percent = new Label((a.points == null) ? "NA" : (a.points/a.total)*100 + "%");
+            Label percent = new Label(getPercentString(a.total, a.points));
 
             Container gradeBox = BoxLayout.encloseY(points, total);
             gradeBox.setUIID("GradePercentV");
