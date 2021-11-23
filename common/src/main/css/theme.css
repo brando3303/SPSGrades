@@ -7,11 +7,13 @@
     --paletteGreen: #DB5461;
     --paletteRed: #686963;
     --paletteOrange: #8AA29E;
+    --backgroundColor: #d4ebf5;
+    --formHeaderColor: #075b7f;
 }
 
 Form{
-    background-color: black;
-    color: var(--paletteOrange);
+    background-color: var(--backgroundColor);
+
 
 }
 
@@ -23,8 +25,8 @@ Button {
 
 /** Style for App Title Bar Text */
 Title {
-    text-align: center;
-    font-size: 4mm;
+
+    font-size: 3mm;
     font-family: "native:MainLight";
 }
 
@@ -127,7 +129,7 @@ GradePercentV{
 }
 
 SignInWarning{
-    font-align: center;
+    text-align: center;
     color: white;
     font-size: 3mm;
 }

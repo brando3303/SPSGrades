@@ -11,6 +11,8 @@ import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.table.TableLayout;
 import org.littlemonkey.connectivity.Connectivity;
 
+import java.io.IOException;
+
 import static com.codename1.ui.CN.log;
 
 //needs to implement PushCallback
@@ -89,7 +91,7 @@ public class Main extends Lifecycle {
             ip.dispose();
             return;
         }
-        loadUserSignIn(username, pwd, new Settings());
+        loadUserSignIn(username, pwd, settings);
         log("the time to sign in was: " + (System.currentTimeMillis() - time) / 1000 + " seconds");
     }
 
@@ -105,24 +107,18 @@ public class Main extends Lifecycle {
         TextField passwordField = new TextField("", "  Password", 20, TextArea.PASSWORD);
         passwordField.setUIID("RoundBorder");
 
-        CheckBox rememberMeCheck = new CheckBox("Remember Me");
-        rememberMeCheck.setOppositeSide(false);
-        rememberMeCheck.setSelected(true);
-        rememberMeCheck.setUIID("RememberCheck");
-
         Button signInButton = new Button("Sign In");
         signInButton.addActionListener(e ->
-                newSignInEnterAction(usernameField.getText(), passwordField.getText(), rememberMeCheck.isSelected()));
+                newSignInEnterAction(usernameField.getText(), passwordField.getText()));
 
         //adding listeners to the username and password listeners, calling the method "signInSwitchForm()" for both
-        usernameField.setDoneListener(e -> newSignInEnterAction(usernameField.getText(), passwordField.getText(), rememberMeCheck.isSelected()));
-        passwordField.setDoneListener(e -> newSignInEnterAction(usernameField.getText(), passwordField.getText(), rememberMeCheck.isSelected()));
+        usernameField.setDoneListener(e -> newSignInEnterAction(usernameField.getText(), passwordField.getText()));
+        passwordField.setDoneListener(e -> newSignInEnterAction(usernameField.getText(), passwordField.getText()));
 
 
         signInForm.add(new Label("Sign in using your SPS Source login."));
         signInForm.add(usernameField);
         signInForm.add(passwordField);
-        signInForm.add(rememberMeCheck);
         signInForm.add(signInButton);
 
         //doesn't work anymore, became unuseful after implementing inbox and assignments which required separate get requests
@@ -139,7 +135,7 @@ public class Main extends Lifecycle {
     }
 
     //the method which is called when a user signs in from the sign in page
-    private void newSignInEnterAction(String user, String password, Boolean choseRemember) {
+    private void newSignInEnterAction(String user, String password) {
         double time = System.currentTimeMillis();
         Dialog ip = new InfiniteProgress().showInfiniteBlocking();
         if (!Connectivity.isConnected()) {
@@ -147,22 +143,23 @@ public class Main extends Lifecycle {
             ip.dispose();
             return;
         }
-        createUserSignIn(user, password, choseRemember, new Settings());
+        createUserSignIn(user, password, new Settings());
         log("the time to sign in was: " + (System.currentTimeMillis() - time) / 1000 + " seconds");
 
     }
 
     //called when the username or password is submitted
-    private void createUserSignIn(String user, String pass, Boolean save, Settings settings) {
+    private void createUserSignIn(String user, String pass, Settings settings) {
 
         try {
             currentUser = ScraperServer.createNewUser(user, pass);
         } catch (InvalidLoginInfo e) {
-            log("error caught while trying to sign in with a new user");
+            log("error caught while trying to sign in with a new userefsffdfdssfdsfdsfsfd");
             if (!signInWarningDisplayed) {
                 signInForm.add(new Label("wrong username or password", "SignInWarning"));
                 signInWarningDisplayed = true;
             }
+
             signInForm.show();
             return;
         }
@@ -172,10 +169,10 @@ public class Main extends Lifecycle {
         createGradesForm();
         gradesForm.show();
 
-        if (save) {
-            Storage.getInstance().writeObject("userpass", new String[]{currentUser.getUsername(), currentUser.getPassword()});
-            Storage.getInstance().writeObject("settings", new String[]{settings.getNotifsOn() ? "on" : "off"});
-        }
+
+        Storage.getInstance().writeObject("userpass", new String[]{currentUser.getUsername(), currentUser.getPassword()});
+        Storage.getInstance().writeObject("settings", new String[]{settings.getNotifsOn() ? "on" : "off"});
+
     }
 
     private void loadUserSignIn(String username, String pwd, Settings settings) {
@@ -188,6 +185,9 @@ public class Main extends Lifecycle {
                 signInForm.add(new Label("wrong username or password", "SignInWarning"));
                 signInWarningDisplayed = true;
             }
+            Storage.getInstance().deleteStorageFile("userpass");
+            Storage.getInstance().deleteStorageFile("settings");
+            log("deleted storage things");
             signInForm.show();
             return;
         }
@@ -201,6 +201,13 @@ public class Main extends Lifecycle {
     //called when a user successfully signs in
     private void createGradesForm() {
         gradesForm = new Form("Grades", BoxLayout.y());
+        try {
+            gradesForm.getToolbar().getStyle().setBgImage(Image.createImage("icon.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        gradesForm.getToolbar().getStyle().setBgColor(ColorUtil.GREEN);
+
         gradesForm.getToolbar().addMaterialCommandToSideMenu("SignOut",
                 FontImage.MATERIAL_LOGOUT, 4, e -> signOut());
         gradesForm.getToolbar().addMaterialCommandToSideMenu("Settings",
@@ -307,6 +314,7 @@ public class Main extends Lifecycle {
             //TODO: send server notification preferences
             Storage.getInstance().writeObject("settings", Deserializer.serializeSettings(currentUser.getSettings()));
             log("stored settings and user info");
+            log(currentUser.getSettings().getNotifsOn() ? "notifs are on" : "notifs are off");
             gradesForm.show();
         });
 

@@ -1,7 +1,7 @@
 package com.brandon.scraper;
 
 public class Settings {
-    public Boolean notifsOn = false;
+    public Boolean notifsOn = true;
 
     public Settings(){}
 

@@ -3,6 +3,7 @@ package com.brandon.scraper;
 import com.codename1.io.ConnectionRequest;
 import com.codename1.io.JSONParser;
 import com.codename1.io.NetworkManager;
+import com.codename1.io.Util;
 import com.codename1.util.StringUtil;
 
 import java.io.ByteArrayInputStream;
@@ -46,12 +47,17 @@ public class ScraperServer {
 
     public static Student createNewUser(String username, String password) throws InvalidLoginInfo{
         ConnectionRequest r = new ConnectionRequest();
-        r.setUrl(CREATE_USER + "?username=" + username + "&pwd=" + password + "&secret=" + SECRETKEY);
+        r.setUrl(CREATE_USER);
         r.addArgument("username", username);
         r.addArgument("pwd",password);
         r.addArgument("secret",SECRETKEY);
         NetworkManager.getInstance().addToQueueAndWait(r);
-
+        try {
+            log(Util.readToString(new ByteArrayInputStream(r.getResponseData())) + "was the response data");
+        } catch (IOException e) {
+            e.printStackTrace();
+            log("error trying to read it");
+        }
 
 
         try {
@@ -68,6 +74,7 @@ public class ScraperServer {
                 throw new InvalidLoginInfo("no user exists on the source");
             }
             else{
+                log("created a new user in the db");
                 return createStudentFromMap(studentJson, username, password);
             }
         } catch (IOException e) {
@@ -110,46 +117,48 @@ public class ScraperServer {
             returnStudent.courses.add(course);
         }
 
-        LinkedHashMap<String, Object> inboxMap = (LinkedHashMap<String, Object>) studentJson.get("inbox");
         Inbox inbox = new Inbox();
-        Set<String> set = inboxMap.keySet();
-        for(String s : set){
-            LinkedHashMap<String, Object> inboxItemMap = (LinkedHashMap<String, Object>) inboxMap.get(s);
-            InboxItem item = new InboxItem();
+        if(studentJson.containsKey("inbox")) {
+            LinkedHashMap<String, Object> inboxMap = (LinkedHashMap<String, Object>) studentJson.get("inbox");
+            Set<String> set = inboxMap.keySet();
+            for (String s : set) {
+                LinkedHashMap<String, Object> inboxItemMap = (LinkedHashMap<String, Object>) inboxMap.get(s);
+                InboxItem item = new InboxItem();
 
-            item.index = s;
-            item.courseName = (String)inboxItemMap.get("courseName");
-            item.deleted = inboxItemMap.get("deleted") == "true";
-            item.gradeBefore = (String)inboxItemMap.get("gradeBefore");
-            item.gradeNow = (String)inboxItemMap.get("gradeNow");
-            item.time = (Double)inboxItemMap.get("time");
-            item.timeReadable = (String)inboxItemMap.get("timeReadable");
+                item.index = s;
+                item.courseName = (String) inboxItemMap.get("courseName");
+                item.deleted = inboxItemMap.get("deleted") == "true";
+                item.gradeBefore = (String) inboxItemMap.get("gradeBefore");
+                item.gradeNow = (String) inboxItemMap.get("gradeNow");
+                item.time = (Double) inboxItemMap.get("time");
+                item.timeReadable = (String) inboxItemMap.get("timeReadable");
 
-            ArrayList<LinkedHashMap<String, Object>> assignmentChangesMap = (ArrayList<LinkedHashMap<String, Object>>) inboxItemMap.get("assignmentChanges");
-            if(assignmentChangesMap != null) {
-                for (LinkedHashMap<String, Object> acMap : assignmentChangesMap) {
-                    AssignmentChange ac = new AssignmentChange();
-                    ac.name = (String) acMap.get("name");
-                    ac.type = (String) acMap.get("type");
-                    if (ac.type.equals("modified")) {
-                        ac.pointsBefore = (Double) acMap.get("pointBefore");
-                        ac.pointsNow = (Double) acMap.get("pointsNow");
-                    } else if (ac.type.equals("created")) {
-                        ac.points = (Double) acMap.get("points");
+                ArrayList<LinkedHashMap<String, Object>> assignmentChangesMap = (ArrayList<LinkedHashMap<String, Object>>) inboxItemMap.get("assignmentChanges");
+                if (assignmentChangesMap != null) {
+                    for (LinkedHashMap<String, Object> acMap : assignmentChangesMap) {
+                        AssignmentChange ac = new AssignmentChange();
+                        ac.name = (String) acMap.get("name");
+                        ac.type = (String) acMap.get("type");
+                        if (ac.type.equals("modified")) {
+                            ac.pointsBefore = (Double) acMap.get("pointBefore");
+                            ac.pointsNow = (Double) acMap.get("pointsNow");
+                        } else if (ac.type.equals("created")) {
+                            ac.points = (Double) acMap.get("points");
+                        }
+                        ac.total = (Double) acMap.get("total");
+
+                        item.assignmentChanges.add(ac);
                     }
-                    ac.total = (Double) acMap.get("total");
-
-                    item.assignmentChanges.add(ac);
                 }
-            }
 
-            for(Course c : returnStudent.courses){
-                if(item.courseName.equals(c.courseName)){
-                    item.course = c;
+                for (Course c : returnStudent.courses) {
+                    if (item.courseName.equals(c.courseName)) {
+                        item.course = c;
+                    }
                 }
-            }
 
-            inbox.inboxItems.add(item);
+                inbox.inboxItems.add(item);
+            }
         }
         returnStudent.inbox = inbox;
 
