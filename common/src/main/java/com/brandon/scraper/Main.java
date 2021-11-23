@@ -11,8 +11,6 @@ import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.table.TableLayout;
 import org.littlemonkey.connectivity.Connectivity;
 
-import java.io.IOException;
-
 import static com.codename1.ui.CN.log;
 
 //needs to implement PushCallback
@@ -201,11 +199,6 @@ public class Main extends Lifecycle {
     //called when a user successfully signs in
     private void createGradesForm() {
         gradesForm = new Form("Grades", BoxLayout.y());
-        try {
-            gradesForm.getToolbar().getStyle().setBgImage(Image.createImage("icon.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         gradesForm.getToolbar().getStyle().setBgColor(ColorUtil.GREEN);
 
         gradesForm.getToolbar().addMaterialCommandToSideMenu("SignOut",
