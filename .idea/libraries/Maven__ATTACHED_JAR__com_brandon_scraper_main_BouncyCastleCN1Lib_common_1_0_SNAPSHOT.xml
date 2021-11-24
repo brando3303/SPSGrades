@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Maven: ATTACHED-JAR: com.brandon.scraper:main-BouncyCastleCN1Lib:common:1.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/cn1libs/BouncyCastleCN1Lib/jars/main.zip!/" />
+      <root url="jar://$PROJECT_DIR$/cn1libs/BouncyCastleCN1Lib/jars/main.zip!/" />
+      <root url="jar://$PROJECT_DIR$/cn1libs/BouncyCastleCN1Lib/jars/main.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

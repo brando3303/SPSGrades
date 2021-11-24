@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/main.iml" filepath="$PROJECT_DIR$/.idea/main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cn1libs/BouncyCastleCN1Lib/main-BouncyCastleCN1Lib.iml" filepath="$PROJECT_DIR$/cn1libs/BouncyCastleCN1Lib/main-BouncyCastleCN1Lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cn1libs/Connectivity/main-Connectivity.iml" filepath="$PROJECT_DIR$/cn1libs/Connectivity/main-Connectivity.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cn1libs/main-cn1libs.iml" filepath="$PROJECT_DIR$/cn1libs/main-cn1libs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common/main-common.iml" filepath="$PROJECT_DIR$/common/main-common.iml" />
+    </modules>
+  </component>
+</project>
