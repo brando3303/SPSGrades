@@ -235,23 +235,8 @@ public class Main extends Lifecycle {
             classSelectButton.addActionListener(e -> selectClass(sc));
 
             //set the color of the letter grade (unfortunately this is impossible in css alone)
-            switch (grade.getText()) {
-                case "A":
-                    grade.getAllStyles().setFgColor(ColorUtil.GREEN);
-                    break;
-                case "B":
-                    grade.getAllStyles().setFgColor(ColorUtil.BLUE);
-                    break;
-                case "C":
-                    grade.getAllStyles().setFgColor(ColorUtil.YELLOW);
-                    break;
-                case "D":
-                    grade.getAllStyles().setFgColor(ColorUtil.red(0));
-                    break;
-                case "NA":
-                    grade.getAllStyles().setFgColor(ColorUtil.GRAY);
-                    break;
-            }
+            grade.getAllStyles().setFgColor(Grade.getGradeColor(Double.parseDouble(sc.gradePercent)));
+
 
             Container gradeBox = BoxLayout.encloseY(period, grade, percent);
             gradeBox.setUIID("GradePercentV");
