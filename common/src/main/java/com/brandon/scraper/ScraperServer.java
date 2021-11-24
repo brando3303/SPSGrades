@@ -187,4 +187,24 @@ public class ScraperServer {
         log("deactivating user");
         NetworkManager.getInstance().addToQueue(r);
     }
+
+    public static Student updateUser(Student student){
+        String link = UPDATE_USER;
+        ConnectionRequest r = new ConnectionRequest();
+        r.setPost(true);
+        r.setUrl(link);
+        r.addArgument("username", student.getUsername());
+        r.addArgument("secret", SECRETKEY);
+        log("updating user");
+        NetworkManager.getInstance().addToQueueAndWait(r);
+
+        try {
+            Map<String, Object> studentJson = new JSONParser().parseJSON(new InputStreamReader(new ByteArrayInputStream(r.getResponseData()), "UTF-8"));
+            return createStudentFromMap((Map<String,Object>)studentJson.get("userNow"), student.getUsername(), student.getPassword());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
 }

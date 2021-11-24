@@ -24,7 +24,7 @@ Button {
 }
 
 /** Style for App Title Bar Text */
-Title {
+TitleArea {
 
     font-size: 3mm;
     font-family: "native:MainLight";

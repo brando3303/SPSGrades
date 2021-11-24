@@ -8,6 +8,7 @@ import com.codename1.io.Storage;
 import com.codename1.system.Lifecycle;
 import com.codename1.ui.*;
 import com.codename1.ui.layouts.BoxLayout;
+import com.codename1.ui.plaf.UIManager;
 import com.codename1.ui.table.TableLayout;
 import org.littlemonkey.connectivity.Connectivity;
 
@@ -199,13 +200,23 @@ public class Main extends Lifecycle {
     //called when a user successfully signs in
     private void createGradesForm() {
         gradesForm = new Form("Grades", BoxLayout.y());
-        gradesForm.getToolbar().getStyle().setBgColor(ColorUtil.GREEN);
+        gradesForm.getToolbar().setSelectedStyle(UIManager.getInstance().getComponentStyle("TitleArea"));
+
+        //gradesForm.getToolbar().getUnselectedStyle().setBgColor(ColorUtil.GREEN);
 
         gradesForm.getToolbar().addMaterialCommandToSideMenu("SignOut",
                 FontImage.MATERIAL_LOGOUT, 4, e -> signOut());
         gradesForm.getToolbar().addMaterialCommandToSideMenu("Settings",
                 FontImage.MATERIAL_SETTINGS, 4, e -> settingsSwitchForm());
         gradesForm.getToolbar().addMaterialCommandToRightBar("Inbox", FontImage.MATERIAL_UPDATE, e -> inboxForm.show());
+        gradesForm.getContentPane().addPullToRefresh(() -> {
+            if(!Connectivity.isConnected()){
+                return;
+            }
+            currentUser = ScraperServer.updateUser(currentUser);
+            createGradesForm();
+            gradesForm.show();
+        });
 
         //create a class tab for every class in the current student
         for (Course sc : currentUser.courses) {
