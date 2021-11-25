@@ -39,6 +39,7 @@ public class Main extends Lifecycle {
         loading.show();
 
         Display.getInstance().registerPush();
+        Display.getInstance().lockOrientation(true);
         //encrypts all data stored, and is just simple but effective layer of protect from who knows
         //EncryptedStorage.install("BrandonEvan");
 
