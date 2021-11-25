@@ -7,7 +7,7 @@
     --paletteGreen: #DB5461;
     --paletteRed: #686963;
     --paletteOrange: #8AA29E;
-    --backgroundColor: #d4ebf5;
+    --backgroundColor: white;
     --formHeaderColor: #075b7f;
 }
 
@@ -99,12 +99,19 @@ Percent{
     padding: 0mm;
     font-family: "native:MainLight";
     font-size: 2.5mm;
+    color: #2d3436;
 }
 
 CourseName{
     font-size: 3mm;
     text-align: left;
-    color: grey;
+    color: #2d3436;
+}
+
+Teacher{
+    font-size: 2mm;
+    text-align: left;
+    color: #636e72;
 }
 
 Period{
@@ -117,15 +124,18 @@ Period{
 }
 
 GradeGrid{
-    background: var(--paletteDarkBlue);
-    border-radius: 2.5mm;
-    padding: 0mm 1mm 0mm 1mm;
+    display: block;
+    width: 500px;
+    background: #dfe6e9;
+    margin: 5px 20px;
+    border: 1px solid black;
+    border-radius: 25px;
+    padding: 5px;
 }
 
 GradePercentV{
     margin: 0mm;
     padding: 1mm;
-
 }
 
 SignInWarning{

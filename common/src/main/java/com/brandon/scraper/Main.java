@@ -1,6 +1,5 @@
 package com.brandon.scraper;
 
-import com.codename1.charts.util.ColorUtil;
 import com.codename1.components.InfiniteProgress;
 import com.codename1.components.SpanLabel;
 import com.codename1.components.Switch;
@@ -221,11 +220,13 @@ public class Main extends Lifecycle {
         //create a class tab for every class in the current student
         for (Course sc : currentUser.courses) {
             Label name = new Label(sc.courseName);
+            Label teacher = new Label(sc.teacher);
             Label period = new Label("" + sc.period.intValue());
             Label grade = new Label(sc.gradeLetter);
             Label percent = new Label((sc.gradePercent.equals("NA")) ? "NA" : sc.gradePercent + "%");
 
             name.setUIID("CourseName");
+            teacher.setUIID("Teacher");
             period.setUIID("Period");
             grade.setUIID("LetterGrade");
             percent.setUIID("Percent");
@@ -237,15 +238,18 @@ public class Main extends Lifecycle {
             //set the color of the letter grade (unfortunately this is impossible in css alone)
             grade.getAllStyles().setFgColor(Grade.getGradeColor(Double.parseDouble(sc.gradePercent)));
 
+            Container nameTeacherBox = BoxLayout.encloseY(name, teacher);
+            nameTeacherBox.setUIID("NameTeacherBox");
 
-            Container gradeBox = BoxLayout.encloseY(period, grade, percent);
+            // Container gradeBox = BoxLayout.encloseY(period, grade, percent);
+            Container gradeBox = BoxLayout.encloseY(grade, percent);
             gradeBox.setUIID("GradePercentV");
 
             //the actual container which holds the contents of each class tab
             Container grid = new Container(new TableLayout(1, 3));
             sc.tab = grid;
             grid.setUIID("GradeGrid");
-            grid.add(gradeBox).add(name);
+            grid.add(nameTeacherBox).add(gradeBox);
             grid.setLeadComponent(classSelectButton);
 
             gradesForm.add(grid);
@@ -405,5 +409,3 @@ public class Main extends Lifecycle {
 //
 //    }
 }
-
-
