@@ -5,11 +5,11 @@ import com.codename1.charts.util.ColorUtil;
 public enum Grade {
     // https://flatuicolors.com/palette/us
     A (ColorUtil.rgb(0, 184, 148), 93.0, 1000.0), // Dark green
-    Am (ColorUtil.rgb(85, 239, 196), 90.0, 92.99), // Light green
+    Am (ColorUtil.rgb(65, 219, 176), 90.0, 92.99), // Light green -20 darker
     Bp (ColorUtil.rgb(0, 206, 201), 87.0, 89.99), // Turquoise
     B (ColorUtil.rgb(116, 185, 255), 83.0, 86.99), // Light blue
     Bm (ColorUtil.rgb(9, 132, 227), 80.0, 82.99), // Dark blue
-    Cp (ColorUtil.rgb(247,208,56),77.0,79.99),
+    Cp (ColorUtil.rgb(247,208,56),77.0,79.99), // Dark yellow
     C (ColorUtil.rgb(247,208,56), 73.0,76.99),
     Cm (ColorUtil.rgb(235,117,50), 70.0,72.99),
     Dp (ColorUtil.rgb(230,38,31),67.0, 69.99),
@@ -28,6 +28,8 @@ public enum Grade {
     public static int getGradeColor(Double percent){
         for(Grade g : Grade.values()){
             if(percent >= g.min && percent < g.max){
+                System.out.println(percent);
+                System.out.println(g);
                 return g.color;
             }
         }
