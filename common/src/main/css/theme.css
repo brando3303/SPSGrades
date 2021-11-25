@@ -37,21 +37,18 @@ DialogBody {
 }
 
 RoundBorder.unselected{
-    border: 4px cn1-pill-border;
-    border-color: var(--paletteDarkBlue);
+    border: 2px cn1-pill-border black;
     text-align:left;
     margin:1mm;
     padding:3mm;
-    color: var(--paletteGreen);
 }
 
 RoundBorder.selected {
-
-    border: 4px cn1-pill-border;
-    background: var(--paletteDarkBlue);
+    border: 2px cn1-pill-border black;
     text-align:left;
     margin:1mm;
     padding:3mm;
+    background: #dfe6e9;
 }
 
 

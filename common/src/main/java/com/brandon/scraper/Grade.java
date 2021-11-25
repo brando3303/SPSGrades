@@ -9,12 +9,12 @@ public enum Grade {
     Bp (ColorUtil.rgb(0, 206, 201), 87.0, 89.99), // Turquoise
     B (ColorUtil.rgb(116, 185, 255), 83.0, 86.99), // Light blue
     Bm (ColorUtil.rgb(9, 132, 227), 80.0, 82.99), // Dark blue
-    Cp (ColorUtil.rgb(247,208,56),77.0,79.99), // Dark yellow
-    C (ColorUtil.rgb(247,208,56), 73.0,76.99),
-    Cm (ColorUtil.rgb(235,117,50), 70.0,72.99),
-    Dp (ColorUtil.rgb(230,38,31),67.0, 69.99),
-    D (ColorUtil.rgb(230,38,31), 60.0,66.99),
-    E (ColorUtil.rgb(230,38,31),0.0,59.99);
+    Cp (ColorUtil.rgb(197,158,6),77.0,79.99), // Dark yellow -50 darker
+    C (ColorUtil.rgb(197,158,6), 73.0,76.99), // Dark yellow -50 darker
+    Cm (ColorUtil.rgb(197,158,6), 70.0,72.99), // Dark yellow -50 darker
+    Dp (ColorUtil.rgb(214, 48, 49),67.0, 69.99), // Red
+    D (ColorUtil.rgb(214, 48, 49), 60.0,66.99), // Red
+    E (ColorUtil.rgb(214, 48, 49),0.0,59.99); // Red
 
     private int color;
     private Double max;

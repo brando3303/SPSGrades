@@ -137,7 +137,7 @@ public class Main extends Lifecycle {
 
         //add a toolbar command which gives the user information about password security
         signInForm.getToolbar().addMaterialCommandToLeftBar("Security", FontImage.MATERIAL_HELP, 4, e -> Dialog.show("Information Security",
-                "We are unable to actually view your password as communication with The Source occurs entirely on your device.", "OK", null));
+                "All user data is encrypted and stored in a secure database. When a user is no longer active or signs out, all data is deleted.", "OK", null));
     }
 
     //the method which is called when a user signs in from the sign in page

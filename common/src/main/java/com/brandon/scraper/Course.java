@@ -10,7 +10,7 @@ import com.codename1.ui.Form;
 import com.codename1.ui.Label;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.table.TableLayout;
-import com.sun.tools.javac.util.ArrayUtils;
+//import com.sun.tools.javac.util.ArrayUtils; // This was giving me an error -Evan
 
 import static com.codename1.ui.CN.log;
 
@@ -46,7 +46,10 @@ public class Course {
     }
 
     public static String getPercentString(Double total, Double points){
-        return (points == null) ? "NA" : Math.round((points/total)*10000)/100.0 + "%";
+        if (total == 0 || points == null) {
+            return "NA";
+        }
+        return Math.round((points/total)*10000)/100.0 + "%";
     }
 
     //creates new form which contains the assignments for this class
@@ -64,7 +67,7 @@ public class Course {
             Label total = new Label("" + a.total);
             Label percent = new Label(getPercentString(a.total, a.points));
 
-            if(a.points != null) {
+            if(a.points != null || a.total == 0) {
                 percent.getAllStyles().setFgColor(Grade.getGradeColor(a.points/a.total*100));
             }
             else{percent.getAllStyles().setFgColor(ColorUtil.GRAY);};
