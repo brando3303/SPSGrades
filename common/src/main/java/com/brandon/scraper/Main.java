@@ -4,6 +4,8 @@ import com.codename1.components.InfiniteProgress;
 import com.codename1.components.SpanLabel;
 import com.codename1.components.Switch;
 import com.codename1.io.Storage;
+import com.codename1.l10n.ParseException;
+import com.codename1.l10n.SimpleDateFormat;
 import com.codename1.system.Lifecycle;
 import com.codename1.ui.*;
 import com.codename1.ui.layouts.BoxLayout;
@@ -26,6 +28,11 @@ public class Main extends Lifecycle {
     @Override
     public void runApp() {
 
+        try {
+            log(new SimpleDateFormat("yyyy-MM-dd").parse("2021-11-22").getTime() + "");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
 
         Form loading = new Form();

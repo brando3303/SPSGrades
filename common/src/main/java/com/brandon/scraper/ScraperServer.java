@@ -4,6 +4,8 @@ import com.codename1.io.ConnectionRequest;
 import com.codename1.io.JSONParser;
 import com.codename1.io.NetworkManager;
 import com.codename1.io.Util;
+import com.codename1.l10n.ParseException;
+import com.codename1.l10n.SimpleDateFormat;
 import com.codename1.util.StringUtil;
 
 import java.io.ByteArrayInputStream;
@@ -105,7 +107,17 @@ public class ScraperServer {
             ArrayList<LinkedHashMap<String,Object>> assignmentList = (ArrayList<LinkedHashMap<String, Object>>) ((LinkedHashMap<String, Object>)studentJson.get("lastAssignments")).get(Integer.toString(period));
             for(LinkedHashMap<String,Object> assignmentMap : assignmentList){
                 Assignment a = new Assignment();
-                a.dateModified = (String)assignmentMap.get("dateModified");
+                a.modifiedDate = (String)assignmentMap.get("modifiedDate");
+
+                if(a.modifiedDate != null) {
+                    try {
+                        a.epochDate = new SimpleDateFormat("yyyy-MM-dd").parse(a.modifiedDate).getTime();
+                        log(a.epochDate + "");
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+
                 a.name = (String)assignmentMap.get("name");
                 if(assignmentMap.containsKey("points")) {
                     a.points = (Double) assignmentMap.get("points");
@@ -162,6 +174,12 @@ public class ScraperServer {
         }
         returnStudent.inbox = inbox;
 
+
+        for(Course c : returnStudent.courses){
+            if(c.assignments.size() != 0) {
+                c.sortAssignments();
+            }
+        }
         return returnStudent;
     }
 

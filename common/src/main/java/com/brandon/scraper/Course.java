@@ -1,14 +1,19 @@
 package com.brandon.scraper;
 
+import com.codename1.components.SpanLabel;
+import com.codename1.l10n.ParseException;
+import com.codename1.l10n.SimpleDateFormat;
 import com.codename1.ui.Container;
 import com.codename1.ui.FontImage;
 import com.codename1.ui.Form;
 import com.codename1.ui.Label;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.table.TableLayout;
+import com.sun.tools.javac.util.ArrayUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import static com.codename1.ui.CN.log;
+
+import java.util.*;
 
 public class Course {
 
@@ -20,6 +25,7 @@ public class Course {
     public String teacher;
 
     public List<Assignment> assignments;
+
 
 
     private Form classPage;
@@ -69,5 +75,32 @@ public class Course {
             classPage.add(assignmentTab);
         }
         return classPage;
+    }
+
+    //this is convoluted and frankly I dont care
+    public void sortAssignments(){
+        long[] epochData = new long[assignments.size()];
+
+        for(int i = 0; i < assignments.size(); i++){
+            epochData[i] = assignments.get(i).epochDate;
+        }
+        Arrays.sort(epochData);
+        for(long b : epochData){
+            log(b  + "");
+        }
+        ArrayList<Assignment> sortedAssignments = new ArrayList<>();
+        for(long e : epochData){
+            for(Iterator<Assignment> iterator = assignments.listIterator(); iterator.hasNext();){
+                Assignment a = iterator.next();
+                if(e == a.epochDate){
+                    sortedAssignments.add(a);
+                    assignments.remove(a);
+                    break;
+                }
+            }
+        }
+        Collections.reverse(sortedAssignments);
+        assignments = sortedAssignments;
+
     }
 }
