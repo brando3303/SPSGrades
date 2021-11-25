@@ -28,8 +28,6 @@ public enum Grade {
     public static int getGradeColor(Double percent){
         for(Grade g : Grade.values()){
             if(percent >= g.min && percent < g.max){
-                System.out.println(percent);
-                System.out.println(g);
                 return g.color;
             }
         }

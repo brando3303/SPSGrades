@@ -1,5 +1,6 @@
 package com.brandon.scraper;
 
+import com.codename1.charts.util.ColorUtil;
 import com.codename1.components.SpanLabel;
 import com.codename1.l10n.ParseException;
 import com.codename1.l10n.SimpleDateFormat;
@@ -58,10 +59,16 @@ public class Course {
         });
 
         for(Assignment a : assignments){
-            Label name = new Label(a.name);
+            SpanLabel name = new SpanLabel(a.name);
             Label points = new Label(a.points != null ? "" + a.points : "NA");
             Label total = new Label("" + a.total);
             Label percent = new Label(getPercentString(a.total, a.points));
+
+            if(a.points != null) {
+                percent.getAllStyles().setFgColor(Grade.getGradeColor(a.points/a.total*100));
+            }
+            else{percent.getAllStyles().setFgColor(ColorUtil.GRAY);};
+
 
             Container gradeBox = BoxLayout.encloseY(points, total);
             gradeBox.setUIID("GradePercentV");
