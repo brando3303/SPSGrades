@@ -55,6 +55,7 @@ public class Course {
     //creates new form which contains the assignments for this class
     public Form createCoursePage(){
         classPage = new Form(courseName, BoxLayout.y());
+        Utils.setToolbarUIIDForSolidColor(classPage,"TitleArea");
         classPage.getToolbar().addMaterialCommandToLeftBar("Back",FontImage.MATERIAL_ARROW_BACK_IOS_NEW, 4,
                 e -> {
             classPage.setVisible(false);

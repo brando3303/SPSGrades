@@ -1,5 +1,6 @@
 package com.brandon.scraper;
 
+import com.codename1.charts.util.ColorUtil;
 import com.codename1.components.InfiniteProgress;
 import com.codename1.components.SpanLabel;
 import com.codename1.components.Switch;
@@ -9,6 +10,8 @@ import com.codename1.l10n.SimpleDateFormat;
 import com.codename1.system.Lifecycle;
 import com.codename1.ui.*;
 import com.codename1.ui.layouts.BoxLayout;
+import com.codename1.ui.plaf.Border;
+import com.codename1.ui.plaf.Style;
 import com.codename1.ui.plaf.UIManager;
 import com.codename1.ui.table.TableLayout;
 import org.littlemonkey.connectivity.Connectivity;
@@ -207,9 +210,11 @@ public class Main extends Lifecycle {
     //called when a user successfully signs in
     private void createGradesForm() {
         gradesForm = new Form("Grades", BoxLayout.y());
-        gradesForm.getToolbar().setSelectedStyle(UIManager.getInstance().getComponentStyle("TitleArea"));
 
-        //gradesForm.getToolbar().getUnselectedStyle().setBgColor(ColorUtil.GREEN);
+
+        Utils.setToolbarUIIDForSolidColor(gradesForm,"TitleArea");
+
+
 
         gradesForm.getToolbar().addMaterialCommandToSideMenu("SignOut",
                 FontImage.MATERIAL_LOGOUT, 4, e -> signOut());
@@ -290,8 +295,11 @@ public class Main extends Lifecycle {
 
     private void settingsSwitchForm(){
         Form settings = new Form("Settings",BoxLayout.y());
+        Utils.setToolbarUIIDForSolidColor(settings,"TitleArea");
         settings.getToolbar().addMaterialCommandToLeftBar("Back",FontImage.MATERIAL_ARROW_BACK_IOS_NEW, 4,
                 e -> gradesForm.show());
+
+
         Switch notificationsSwitch = new Switch();
         Button applySettingsButton = new Button("Apply Settings");
 
@@ -329,6 +337,7 @@ public class Main extends Lifecycle {
 
     private void createInboxForm() {
         inboxForm = new Form("Inbox", BoxLayout.y());
+        Utils.setToolbarUIIDForSolidColor(inboxForm,"TitleArea");
         inboxForm.getToolbar().addMaterialCommandToLeftBar("Back", FontImage.MATERIAL_ARROW_BACK_IOS_NEW, 4,
                 e -> {
                     inboxForm.setVisible(false);
