@@ -12,7 +12,7 @@ public class Utils {
     * NOTE: Setting the color of a toolbar will not carry over after a Live CSS recompile
     * */
     public static void setToolbarUIIDForSolidColor(Form form, String UIID){
-        form.getToolbar().setSelectedStyle(UIManager.getInstance().getComponentStyle(UIID));
+        form.getToolbar().setUIID(UIID);
         form.getToolbar().getUnselectedStyle().setBorder(Border.createEmpty(),true);
         form.getToolbar().getUnselectedStyle().setBgTransparency(255);
     }
