@@ -137,7 +137,7 @@ GradePercentV{
 
 SignInWarning{
     text-align: center;
-    color: white;
+    color: red;
     font-size: 3mm;
 }
 
