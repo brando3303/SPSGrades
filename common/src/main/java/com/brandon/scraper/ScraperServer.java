@@ -172,6 +172,7 @@ public class ScraperServer {
             }
         }
         returnStudent.inbox = inbox;
+        returnStudent.inbox.sortInboxItems();
 
 
         for(Course c : returnStudent.courses){
