@@ -424,6 +424,8 @@ public class Main extends Lifecycle {
 
                         Label oldGrade = new Label(ac.pointsBefore + "/" + ac.total);
                         oldGrade.setUIID("AssignmentGradeChange");
+                        log(ac.pointsBefore + "");
+                        log(ac.pointsNow + "");
                         oldGrade.getAllStyles().setFgColor(Grade.getGradeColorFromFraction(ac.pointsBefore, ac.total), true);
 
                         Label newGrade = new Label(ac.pointsNow + "/" + ac.total);
@@ -431,7 +433,6 @@ public class Main extends Lifecycle {
                         newGrade.getAllStyles().setFgColor(Grade.getGradeColorFromFraction(ac.pointsNow, ac.total), true);
 
                         Label arrowImage = new Label();
-                        arrowImage.setMaterialIcon(FontImage.MATERIAL_ARROW_RIGHT);
                         arrowImage.setUIID("AssignmentGradeChangeArrow");
                         if(ac.pointsNow > ac.pointsBefore){
                             arrowImage.getAllStyles().setFgColor(Grade.A.getColor());
@@ -439,8 +440,10 @@ public class Main extends Lifecycle {
                         if(ac.pointsNow < ac.pointsBefore){
                             arrowImage.getAllStyles().setFgColor(Grade.E.getColor());
                         }
+                        arrowImage.setMaterialIcon(FontImage.MATERIAL_ARROW_RIGHT);
+                        assignmentGradeChange.add(oldGrade).add(arrowImage).add(newGrade);
 
-                        assignmentTable.add(oldGrade).add(arrowImage).add(newGrade);
+                        assignmentTable.add(assignmentNameLabel).add(assignmentGradeChange);
                     }
                 }
 
@@ -458,14 +461,14 @@ public class Main extends Lifecycle {
                 oldGrade.getAllStyles().setFgColor(Grade.getGradeColor(Double.parseDouble(ii.gradeBefore)), true);
 
                 Label arrowImage = new Label();
-                arrowImage.setMaterialIcon(FontImage.MATERIAL_ARROW_DROP_DOWN);
                 arrowImage.setUIID("OverallGradeChangeArrow");
                 if(Double.parseDouble(ii.gradeNow) > Double.parseDouble(ii.gradeBefore)){
-                    arrowImage.getAllStyles().setFgColor(Grade.A.getColor(), true);
+                    arrowImage.getAllStyles().setFgColor(Grade.A.getColor());
                 }
                 if(Double.parseDouble(ii.gradeNow) < Double.parseDouble(ii.gradeBefore)){
-                    arrowImage.getAllStyles().setFgColor(Grade.E.getColor(), true);
+                    arrowImage.getAllStyles().setFgColor(Grade.E.getColor());
                 }
+                arrowImage.setMaterialIcon(FontImage.MATERIAL_ARROW_DROP_DOWN);
 
                 overallGradeChanges.add(oldGrade).add(arrowImage).add(newGrade);
 
