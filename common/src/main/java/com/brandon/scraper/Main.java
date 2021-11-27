@@ -401,7 +401,7 @@ public class Main extends Lifecycle {
                 timeStamp.setUIID("TimeStampText");
 
                 //list of changed assignments: the assignment name and the way in which it changed
-                Container assignmentTable = new Container(new TableLayout(2,ii.assignmentChanges.size()));
+                Container assignmentTable = new Container(new TableLayout(ii.assignmentChanges.size(),2));
                 assignmentTable.setUIID("AssignmentChangeTable");
 
                 for(AssignmentChange ac : ii.assignmentChanges){
