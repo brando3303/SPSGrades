@@ -379,7 +379,7 @@ public class Main extends Lifecycle {
                 courseName.setUIID("InboxItemClassName");
 
                 //timestamp text: how long ago the change was detected "2 hrs"
-                Date dif = new Date(new Date().getTime() - ii.time.longValue()*1000);
+                Date dif = new Date(Math.abs(new Date().getTime() - ii.time.longValue()*1000));
 
                 int days = Integer.parseInt(new SimpleDateFormat("DD").format(dif));
                 int hours = Integer.parseInt(new SimpleDateFormat("h").format(dif));
