@@ -25,6 +25,10 @@ public enum Grade {
         this.max = max;
     }
 
+    public int getColor(){
+        return this.color;
+    }
+
     public static int getGradeColor(Double percent){
         for(Grade g : Grade.values()){
             if(percent >= g.min && percent < g.max){
@@ -32,6 +36,13 @@ public enum Grade {
             }
         }
         return 0;
+    }
+    
+    public static int getGradeColorFromFraction(Double points, Double total){
+        if(total == 0){
+            return A.color;
+        }
+        return getGradeColor(points/total*100);
     }
 
 }

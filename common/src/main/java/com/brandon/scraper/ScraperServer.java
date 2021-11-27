@@ -112,7 +112,6 @@ public class ScraperServer {
                 if(a.modifiedDate != null) {
                     try {
                         a.epochDate = new SimpleDateFormat("yyyy-MM-dd").parse(a.modifiedDate).getTime();
-                        log(a.epochDate + "");
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }

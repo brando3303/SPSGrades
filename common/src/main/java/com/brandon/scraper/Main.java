@@ -10,11 +10,15 @@ import com.codename1.l10n.SimpleDateFormat;
 import com.codename1.system.Lifecycle;
 import com.codename1.ui.*;
 import com.codename1.ui.layouts.BoxLayout;
+import com.codename1.ui.layouts.GridLayout;
 import com.codename1.ui.plaf.Border;
 import com.codename1.ui.plaf.Style;
 import com.codename1.ui.plaf.UIManager;
+import com.codename1.ui.table.Table;
 import com.codename1.ui.table.TableLayout;
 import org.littlemonkey.connectivity.Connectivity;
+
+import java.util.Date;
 
 import static com.codename1.ui.CN.log;
 
@@ -358,9 +362,10 @@ public class Main extends Lifecycle {
         for (InboxItem ii : currentUser.inbox.inboxItems) {
             if (!ii.deleted) {
                 log(ii.courseName);
-                Container c = new Container(new TableLayout(1, 2));
-                c.setUIID("GradeGrid");
+                Container inboxItemContainer = new Container(new TableLayout(1, 2));
+                inboxItemContainer.setUIID("GradeGrid");
 
+                //selectable name: the name of the class which has been changed
                 Container selectableText = new Container();
                 Button selectInboxItem = new Button();
                 selectInboxItem.addActionListener(e -> {
@@ -369,20 +374,122 @@ public class Main extends Lifecycle {
 
                 });
                 selectableText.setLeadComponent(selectInboxItem);
+                Label courseName = new Label(ii.courseName);
+                selectableText.add(courseName);
+                courseName.setUIID("InboxItemClassName");
+
+                //timestamp text: how long ago the change was detected "2 hrs"
+                Date dif = new Date(new Date().getTime() - ii.time.longValue()*1000);
+
+                int days = Integer.parseInt(new SimpleDateFormat("DD").format(dif));
+                int hours = Integer.parseInt(new SimpleDateFormat("h").format(dif));
+                int minutes =  Integer.parseInt(new SimpleDateFormat("mm").format(dif));
+                int seconds = Integer.parseInt(new SimpleDateFormat("ss").format(dif));
+                String timeStampText;
+                if(days >= 1){
+                    timeStampText = days + " days ago";
+                } else if(hours >= 2){
+                    timeStampText = hours + " hrs ago";
+                } else if(minutes >= 5){
+                    timeStampText = minutes + " mins ago";
+                } else if(minutes == 0){
+                    timeStampText = seconds + " secs ago";
+                } else{
+                    timeStampText = minutes + " mins, " + seconds + " secs ago";
+                }
+                Label timeStamp = new Label(timeStampText);
+                timeStamp.setUIID("TimeStampText");
+
+                //list of changed assignments: the assignment name and the way in which it changed
+                Container assignmentTable = new Container(new TableLayout(2,ii.assignmentChanges.size()));
+                assignmentTable.setUIID("AssignmentChangeTable");
+
+                for(AssignmentChange ac : ii.assignmentChanges){
+
+                    if(ac.type.equals("created")){
+                        SpanLabel assignmentNameLabel = new SpanLabel("+ " + ac.name);
+                        assignmentNameLabel.setTextUIID("CreatedAssignmentChange");
+                        assignmentNameLabel.getTextComponent().getAllStyles().setFgColor(Grade.A.getColor());
+                        Label newAssignmentGradeLabel = new Label(ac.points + "/" + ac.total);
+                        newAssignmentGradeLabel.setUIID("NewAssignmentGrade");
+                        newAssignmentGradeLabel.getAllStyles().setFgColor(Grade.getGradeColorFromFraction(ac.points, ac.total), true);
+                        assignmentTable.add(assignmentNameLabel).add(newAssignmentGradeLabel);
+                    }
+                    else if(ac.type.equals("modified")){
+                        SpanLabel assignmentNameLabel = new SpanLabel(ac.name);
+                        assignmentNameLabel.setTextUIID("ModifiedAssignmentChange");;
+
+                        Container assignmentGradeChange = new Container(new TableLayout(1,3));
+                        assignmentGradeChange.setUIID("AssignmentGradeChangeContainer");
+
+                        Label oldGrade = new Label(ac.pointsBefore + "/" + ac.total);
+                        oldGrade.setUIID("AssignmentGradeChange");
+                        oldGrade.getAllStyles().setFgColor(Grade.getGradeColorFromFraction(ac.pointsBefore, ac.total), true);
+
+                        Label newGrade = new Label(ac.pointsNow + "/" + ac.total);
+                        newGrade.setUIID("AssignmentGradeChange");
+                        newGrade.getAllStyles().setFgColor(Grade.getGradeColorFromFraction(ac.pointsNow, ac.total), true);
+
+                        Label arrowImage = new Label();
+                        arrowImage.setMaterialIcon(FontImage.MATERIAL_ARROW_RIGHT);
+                        arrowImage.setUIID("AssignmentGradeChangeArrow");
+                        if(ac.pointsNow > ac.pointsBefore){
+                            arrowImage.getAllStyles().setFgColor(Grade.A.getColor());
+                        }
+                        if(ac.pointsNow < ac.pointsBefore){
+                            arrowImage.getAllStyles().setFgColor(Grade.E.getColor());
+                        }
+
+                        assignmentTable.add(oldGrade).add(arrowImage).add(newGrade);
+                    }
+                }
+
+                //the overall grade change on the right
+                Container overallGradeChanges = BoxLayout.encloseY();
+                overallGradeChanges.setUIID("OverallGradeChangesGrid");
+
+                Label newGrade = new Label(ii.gradeNow);
+                newGrade.setUIID("OverallGradeChange");
+                newGrade.getAllStyles().setFgColor(Grade.getGradeColor(Double.parseDouble(ii.gradeNow)), true);
+
+
+                Label oldGrade = new Label(ii.gradeBefore);
+                oldGrade.setUIID("OverallGradeChange");
+                oldGrade.getAllStyles().setFgColor(Grade.getGradeColor(Double.parseDouble(ii.gradeBefore)), true);
+
+                Label arrowImage = new Label();
+                arrowImage.setMaterialIcon(FontImage.MATERIAL_ARROW_DROP_DOWN);
+                arrowImage.setUIID("OverallGradeChangeArrow");
+                if(Double.parseDouble(ii.gradeNow) > Double.parseDouble(ii.gradeBefore)){
+                    arrowImage.getAllStyles().setFgColor(Grade.A.getColor(), true);
+                }
+                if(Double.parseDouble(ii.gradeNow) < Double.parseDouble(ii.gradeBefore)){
+                    arrowImage.getAllStyles().setFgColor(Grade.E.getColor(), true);
+                }
+
+                overallGradeChanges.add(oldGrade).add(arrowImage).add(newGrade);
+
+                Container nameAssignmentListTable = new Container(BoxLayout.y());
+                nameAssignmentListTable.setUIID("NameAssignmentListTable");
+
+                nameAssignmentListTable.add(new Container(new TableLayout(1,2)).add(selectableText).add(timeStamp)).add(assignmentTable);
+
+
 
                 Button delete = new Button(FontImage.MATERIAL_CLEAR);
                 delete.addActionListener(e -> {
-                    c.remove();
+                    inboxItemContainer.remove();
                     if(Connectivity.isConnected()) {
                         ScraperServer.deleteInboxItem(ii, currentUser);
                     }
                     inboxForm.show();
                 });
 
-                c.add(selectableText.add(new Label(ii.courseName)));
-                c.add(delete);
+                inboxItemContainer.add(((TableLayout)inboxItemContainer.getLayout()).createConstraint().horizontalAlign(Component.LEFT).widthPercentage(90),nameAssignmentListTable);
+                inboxItemContainer.add(((TableLayout)inboxItemContainer.getLayout()).createConstraint().horizontalAlign(Component.RIGHT).widthPercentage(10),overallGradeChanges);
+                //inboxItemContainer.add(delete);
 
-                inboxForm.add(c);
+                inboxForm.add(inboxItemContainer);
 
             }
         }

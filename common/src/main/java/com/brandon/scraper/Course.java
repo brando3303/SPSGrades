@@ -96,9 +96,6 @@ public class Course {
             epochData[i] = assignments.get(i).epochDate;
         }
         Arrays.sort(epochData);
-        for(long b : epochData){
-            log(b  + "");
-        }
         ArrayList<Assignment> sortedAssignments = new ArrayList<>();
         for(long e : epochData){
             for(Iterator<Assignment> iterator = assignments.listIterator(); iterator.hasNext();){
