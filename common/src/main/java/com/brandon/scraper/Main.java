@@ -234,7 +234,7 @@ public class Main extends Lifecycle {
         for (Course sc : currentUser.courses) {
             Label name = new Label(sc.courseName);
             Label teacher = new Label(sc.teacher);
-            Label period = new Label("" + sc.period.intValue());
+            Label period = new Label(sc.period);
             Label grade = new Label(sc.gradeLetter);
             Label percent = new Label((sc.gradePercent.equals("NA")) ? "NA" : sc.gradePercent + "%");
 
