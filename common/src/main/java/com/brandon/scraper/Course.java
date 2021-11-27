@@ -22,7 +22,7 @@ public class Course {
     public String frn;
     public String gradeLetter;
     public String gradePercent;
-    public Double period;
+    public String period;
     public String teacher;
 
     public List<Assignment> assignments;

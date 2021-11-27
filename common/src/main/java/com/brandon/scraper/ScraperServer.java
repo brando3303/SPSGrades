@@ -20,7 +20,7 @@ import static com.codename1.ui.CN.log;
 
 public class ScraperServer {
 
-    private static final String GET_USER_FROM_DB = "https://the-source-scraper.herokuapp.com/get_user_from_db?username=USERNAME";
+    private static final String GET_USER = "https://the-source-scraper.herokuapp.com/get_user?username=USERNAME";
     private static final String DELETE_INBOX_ITEM = "https://the-source-scraper.herokuapp.com/delete_inbox_item";
     private static final String CREATE_USER = "https://the-source-scraper.herokuapp.com/create_user"; //requires username and password arguments (username & pwd)
     private static final String DEACTIVATE_USER = "https://the-source-scraper.herokuapp.com/deactivate_user"; //requires a username argument
@@ -30,7 +30,7 @@ public class ScraperServer {
 
     public static Student getStudentFromDataBase(String username, String password) throws InvalidLoginInfo{
         ConnectionRequest r = new ConnectionRequest();
-        r.setUrl(StringUtil.replaceAll(GET_USER_FROM_DB,"USERNAME",username) + "&secret=" + SECRETKEY);
+        r.setUrl(StringUtil.replaceAll(GET_USER,"USERNAME",username) + "&secret=" + SECRETKEY);
         r.setPost(false);
         NetworkManager.getInstance().addToQueueAndWait(r);
         try {
@@ -100,7 +100,7 @@ public class ScraperServer {
             course.frn = (String)courseMap.get("frn");
             course.gradeLetter = (String)courseMap.get("gradeLetter");
             course.gradePercent = (String)courseMap.get("gradePercent");
-            course.period = (Double)courseMap.get("period");
+            course.period = (String)courseMap.get("period");
             course.teacher = (String)courseMap.get("teacher");
 
             //getting Assignemnts
