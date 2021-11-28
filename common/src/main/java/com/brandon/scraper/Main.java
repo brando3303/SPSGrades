@@ -232,6 +232,7 @@ public class Main extends Lifecycle {
         int numItems = currentUser.inbox.getNumberOfUndeletedInboxItems();
         if (numItems > 0) {
             inboxButton.setBadgeText(Integer.toString(numItems));
+            inboxButton.setBadgeUIID("InboxButtonBadge");
         }
 
         gradesForm.getContentPane().addPullToRefresh(() -> {
@@ -423,7 +424,7 @@ public class Main extends Lifecycle {
                 for(AssignmentChange ac : ii.assignmentChanges){
 
                     if(ac.type.equals("created")){
-                        SpanLabel assignmentNameLabel = new SpanLabel("+ " + ac.name);
+                        SpanLabel assignmentNameLabel = new SpanLabel("+ " + ac.name + ":");
                         assignmentNameLabel.setTextUIID("CreatedAssignmentChange");
                         assignmentNameLabel.getTextComponent().getAllStyles().setFgColor(Grade.A.getColor());
                         Label newAssignmentGradeLabel = new Label(ac.points + "/" + ac.total);
@@ -432,19 +433,20 @@ public class Main extends Lifecycle {
                         assignmentTable.add(assignmentNameLabel).add(newAssignmentGradeLabel);
                     }
                     else if(ac.type.equals("modified")){
-                        SpanLabel assignmentNameLabel = new SpanLabel(ac.name);
+                        SpanLabel assignmentNameLabel = new SpanLabel(ac.name + ":");
                         assignmentNameLabel.setTextUIID("ModifiedAssignmentChange");;
 
                         Container assignmentGradeChange = new Container(new TableLayout(1,3));
                         assignmentGradeChange.setUIID("AssignmentGradeChangeContainer");
 
-                        Label oldGrade = new Label(ac.pointsBefore + "/" + ac.total);
+                        Label oldGrade = new Label(Math.round(ac.pointsBefore / ac.total * 100) + "%");
                         oldGrade.setUIID("AssignmentGradeChange");
                         log(ac.pointsBefore + "");
                         log(ac.pointsNow + "");
                         oldGrade.getAllStyles().setFgColor(Grade.getGradeColorFromFraction(ac.pointsBefore, ac.total), true);
 
-                        Label newGrade = new Label(ac.pointsNow + "/" + ac.total);
+                        // Label newGrade = new Label(ac.pointsNow + "/" + ac.total);
+                        Label newGrade = new Label(Math.round(ac.pointsNow / ac.total * 100) + "%");
                         newGrade.setUIID("AssignmentGradeChange");
                         newGrade.getAllStyles().setFgColor(Grade.getGradeColorFromFraction(ac.pointsNow, ac.total), true);
 
@@ -467,12 +469,12 @@ public class Main extends Lifecycle {
                 Container overallGradeChanges = BoxLayout.encloseY();
                 overallGradeChanges.setUIID("OverallGradeChangesGrid");
 
-                Label newGrade = new Label(ii.gradeNow);
+                Label newGrade = new Label(ii.gradeNow + "%");
                 newGrade.setUIID("OverallGradeChange");
                 newGrade.getAllStyles().setFgColor(Grade.getGradeColor(Double.parseDouble(ii.gradeNow)), true);
 
 
-                Label oldGrade = new Label(ii.gradeBefore);
+                Label oldGrade = new Label(ii.gradeBefore + "%");
                 oldGrade.setUIID("OverallGradeChange");
                 oldGrade.getAllStyles().setFgColor(Grade.getGradeColor(Double.parseDouble(ii.gradeBefore)), true);
 
@@ -504,8 +506,8 @@ public class Main extends Lifecycle {
                     inboxForm.show();
                 });
 
-                inboxItemContainer.add(((TableLayout)inboxItemContainer.getLayout()).createConstraint().horizontalAlign(Component.LEFT).widthPercentage(90),nameAssignmentListTable);
-                inboxItemContainer.add(((TableLayout)inboxItemContainer.getLayout()).createConstraint().horizontalAlign(Component.RIGHT).widthPercentage(10),overallGradeChanges);
+                inboxItemContainer.add(((TableLayout)inboxItemContainer.getLayout()).createConstraint().horizontalAlign(Component.LEFT).widthPercentage(87),nameAssignmentListTable);
+                inboxItemContainer.add(((TableLayout)inboxItemContainer.getLayout()).createConstraint().horizontalAlign(Component.RIGHT).widthPercentage(13),overallGradeChanges);
                 //inboxItemContainer.add(delete);
 
                 inboxForm.add(inboxItemContainer);
