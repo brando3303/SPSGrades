@@ -31,6 +31,7 @@ public class Main extends Lifecycle {
     private Form signInForm;
     private Student currentUser;
     private static Main mainInstance;
+    private Button inboxButton;
 
     boolean signInWarningDisplayed = false;
 
@@ -223,7 +224,7 @@ public class Main extends Lifecycle {
         gradesForm.getToolbar().addMaterialCommandToSideMenu("Settings",
                 FontImage.MATERIAL_SETTINGS, 4, e -> settingsSwitchForm());
 
-        Button inboxButton = new Button("inbox");
+        inboxButton = new Button("inbox");
         inboxButton.setUIID("InboxIconBadge");
         inboxButton.addActionListener(e -> inboxForm.show());
         inboxButton.setMaterialIcon(FontImage.MATERIAL_UPDATE);
@@ -372,7 +373,7 @@ public class Main extends Lifecycle {
                             ScraperServer.deleteInboxItem(ii, currentUser);
                         }
                     }
-
+                    inboxButton.setBadgeText("");
                 });
         for (InboxItem ii : currentUser.inbox.inboxItems) {
             if (!ii.deleted) {
