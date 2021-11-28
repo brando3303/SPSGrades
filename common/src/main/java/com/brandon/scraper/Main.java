@@ -34,10 +34,23 @@ public class Main extends Lifecycle {
     private Button inboxButton;
 
     boolean signInWarningDisplayed = false;
+    private boolean started = false;
+    private boolean signedIn = false;
+
+    @Override
+    public void start(){
+        if(!started){
+            runApp();
+            return;
+        } else if(started && !signedIn){
+            signInForm.show();
+        } else if(started && signedIn){
+            signInExistingUser(currentUser.getUsername(),currentUser.getPassword(),currentUser.getSettings());
+        }
+    }
 
     @Override
     public void runApp() {
-
         try {
             log(new SimpleDateFormat("yyyy-MM-dd").parse("2021-11-22").getTime() + "");
         } catch (ParseException e) {
@@ -58,7 +71,7 @@ public class Main extends Lifecycle {
 
         //create the sign in form, but dont necessarily show it
         createSignInForm();
-
+        started = true;
         //check if the file "userpass" exists, and if so, load them as they checked remember me
         if (Storage.getInstance().exists("userpass") && Storage.getInstance().exists("settings")) {
             log("this person has signed in before");
@@ -109,6 +122,7 @@ public class Main extends Lifecycle {
         }
         loadUserSignIn(username, pwd, settings);
         log("the time to sign in was: " + (System.currentTimeMillis() - time) / 1000 + " seconds");
+        signedIn = true;
     }
 
     private void createSignInForm() {
@@ -161,7 +175,7 @@ public class Main extends Lifecycle {
         }
         createUserSignIn(user, password, new Settings());
         log("the time to sign in was: " + (System.currentTimeMillis() - time) / 1000 + " seconds");
-
+        signedIn = true;
     }
 
     //called when the username or password is submitted
@@ -308,6 +322,7 @@ public class Main extends Lifecycle {
             ScraperServer.deactivateUser(currentUser);
         }
         currentUser = null;
+        signedIn = false;
         Storage.getInstance().deleteStorageFile("userpass");
         Storage.getInstance().deleteStorageFile("settings");
         signInForm.show();
