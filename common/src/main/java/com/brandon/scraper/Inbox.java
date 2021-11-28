@@ -34,4 +34,14 @@ public class Inbox {
         inboxItems = sortedInboxItems;
 
     }
+
+    public int getNumberOfUndeletedInboxItems(){
+        int i = 0;
+        for(InboxItem ii : inboxItems){
+            if(!ii.deleted){
+                i++;
+            }
+        }
+        return i;
+    }
 }

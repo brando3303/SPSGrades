@@ -206,6 +206,10 @@ OverallGradeChangeArrow{
 }
 NameAssignmentListTable{}
 
+InboxIconBadge{
+    color: white;
+}
+
 TitleCommand {
     color: white;
 }

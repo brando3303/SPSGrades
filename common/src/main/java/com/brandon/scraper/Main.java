@@ -9,15 +9,16 @@ import com.codename1.l10n.ParseException;
 import com.codename1.l10n.SimpleDateFormat;
 import com.codename1.system.Lifecycle;
 import com.codename1.ui.*;
+import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.layouts.GridLayout;
-import com.codename1.ui.plaf.Border;
 import com.codename1.ui.plaf.Style;
 import com.codename1.ui.plaf.UIManager;
 import com.codename1.ui.table.Table;
 import com.codename1.ui.table.TableLayout;
 import org.littlemonkey.connectivity.Connectivity;
 
+import javax.swing.border.Border;
 import java.util.Date;
 
 import static com.codename1.ui.CN.log;
@@ -211,7 +212,7 @@ public class Main extends Lifecycle {
 
     }
 
-    //called when a user successfully signs in
+    //called when a user successfully signs in or opens the app and is already signed in
     private void createGradesForm() {
         gradesForm = new Form("Grades", BoxLayout.y());
         Utils.setToolbarUIIDForSolidColor(gradesForm,"TitleArea");
@@ -220,7 +221,14 @@ public class Main extends Lifecycle {
                 FontImage.MATERIAL_LOGOUT, 4, e -> signOut());
         gradesForm.getToolbar().addMaterialCommandToSideMenu("Settings",
                 FontImage.MATERIAL_SETTINGS, 4, e -> settingsSwitchForm());
-        gradesForm.getToolbar().addMaterialCommandToRightBar("Inbox", FontImage.MATERIAL_UPDATE, e -> inboxForm.show());
+
+        Button inboxButton = new Button("inbox");
+        inboxButton.addActionListener(e -> inboxForm.show());
+        inboxButton.setUIID("InboxIconBadge");
+        inboxButton.setMaterialIcon(FontImage.MATERIAL_UPDATE);
+        inboxButton.setBadgeText(Integer.toString(currentUser.inbox.getNumberOfUndeletedInboxItems()));
+        gradesForm.getToolbar().add(BorderLayout.EAST,inboxButton);
+
         gradesForm.getContentPane().addPullToRefresh(() -> {
             if(!Connectivity.isConnected()){
                 return;
