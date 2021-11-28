@@ -239,6 +239,7 @@ public class Main extends Lifecycle {
             if(!Connectivity.isConnected()){
                 return;
             }
+            gradesForm.setTransitionOutAnimator(null);
             currentUser = ScraperServer.updateUser(currentUser);
             createGradesForm();
             gradesForm.show();
@@ -372,9 +373,10 @@ public class Main extends Lifecycle {
                     for (InboxItem ii : currentUser.inbox.inboxItems) {
                         if (!ii.deleted) {
                             ScraperServer.deleteInboxItem(ii, currentUser);
+                            ii.deleted = true;
                         }
                     }
-                    inboxButton.setBadgeText("");
+                    updateInboxButtonBadge();
                 });
         for (InboxItem ii : currentUser.inbox.inboxItems) {
             if (!ii.deleted) {
@@ -430,7 +432,7 @@ public class Main extends Lifecycle {
                         Label newAssignmentGradeLabel = new Label(ac.points + "/" + ac.total);
                         newAssignmentGradeLabel.setUIID("NewAssignmentGrade");
                         newAssignmentGradeLabel.getAllStyles().setFgColor(Grade.getGradeColorFromFraction(ac.points, ac.total), true);
-                        assignmentTable.add(assignmentNameLabel).add(newAssignmentGradeLabel);
+                        assignmentTable.add(((TableLayout)inboxItemContainer.getLayout()).createConstraint().horizontalAlign(Component.LEFT).widthPercentage(80),assignmentNameLabel).add(newAssignmentGradeLabel);
                     }
                     else if(ac.type.equals("modified")){
                         SpanLabel assignmentNameLabel = new SpanLabel(ac.name + ":");
@@ -502,7 +504,9 @@ public class Main extends Lifecycle {
                     inboxItemContainer.remove();
                     if(Connectivity.isConnected()) {
                         ScraperServer.deleteInboxItem(ii, currentUser);
+                        updateInboxButtonBadge();
                     }
+
                     inboxForm.show();
                 });
 
@@ -524,8 +528,20 @@ public class Main extends Lifecycle {
         return gradesForm;
     }
 
+    public Student getCurrentUser() {
+        return currentUser;
+    }
 
-//    @Override
+    public void updateInboxButtonBadge(){
+        //update the badge of the inbox button on the grades form
+        if(currentUser.inbox.getNumberOfUndeletedInboxItems() == 0){
+            inboxButton.setText("");
+            return;
+        }
+        inboxButton.setBadgeText(Integer.toString(currentUser.inbox.getNumberOfUndeletedInboxItems()));
+    }
+
+    //    @Override
 //    public void push(String value) {
 //        log("push: " + value);
 //
