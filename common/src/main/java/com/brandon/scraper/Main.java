@@ -167,7 +167,7 @@ public class Main extends Lifecycle {
         try {
             currentUser = ScraperServer.createNewUser(user, pass);
         } catch (InvalidLoginInfo e) {
-            log("error caught while trying to sign in with a new userefsffdfdssfdsfdsfsfd");
+            log("error caught while trying to sign in with a new userefsffdfdssfdsfdsfsfdw");
             if (!signInWarningDisplayed) {
                 signInForm.add(new Label("wrong username or password", "SignInWarning"));
                 signInWarningDisplayed = true;
