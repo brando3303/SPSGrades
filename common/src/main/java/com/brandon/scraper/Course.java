@@ -8,6 +8,7 @@ import com.codename1.ui.Container;
 import com.codename1.ui.FontImage;
 import com.codename1.ui.Form;
 import com.codename1.ui.Label;
+import com.codename1.ui.animations.CommonTransitions;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.table.TableLayout;
 //import com.sun.tools.javac.util.ArrayUtils; // This was giving me an error -Evan
@@ -56,6 +57,8 @@ public class Course {
     public Form createCoursePage(){
         classPage = new Form(courseName, BoxLayout.y());
         Utils.setToolbarUIIDForSolidColor(classPage,"TitleArea");
+
+        classPage.setTransitionOutAnimator(CommonTransitions.createSlide(CommonTransitions.SLIDE_HORIZONTAL,true, 200));
         classPage.getToolbar().addMaterialCommandToLeftBar("Back",FontImage.MATERIAL_ARROW_BACK_IOS_NEW, 4,
                 e -> {
             classPage.setVisible(false);
