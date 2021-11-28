@@ -224,11 +224,14 @@ public class Main extends Lifecycle {
                 FontImage.MATERIAL_SETTINGS, 4, e -> settingsSwitchForm());
 
         Button inboxButton = new Button("inbox");
-        inboxButton.addActionListener(e -> inboxForm.show());
         inboxButton.setUIID("InboxIconBadge");
+        inboxButton.addActionListener(e -> inboxForm.show());
         inboxButton.setMaterialIcon(FontImage.MATERIAL_UPDATE);
-        inboxButton.setBadgeText(Integer.toString(currentUser.inbox.getNumberOfUndeletedInboxItems()));
-        gradesForm.getToolbar().add(BorderLayout.EAST,inboxButton);
+        gradesForm.getToolbar().add(BorderLayout.EAST, inboxButton);
+        int numItems = currentUser.inbox.getNumberOfUndeletedInboxItems();
+        if (numItems > 0) {
+            inboxButton.setBadgeText(Integer.toString(numItems));
+        }
 
         gradesForm.getContentPane().addPullToRefresh(() -> {
             if(!Connectivity.isConnected()){
