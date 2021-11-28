@@ -91,41 +91,44 @@ public class ScraperServer {
         Student returnStudent = new Student(username, password);
 
         LinkedHashMap<String, Object> courses = (LinkedHashMap<String, Object>) studentJson.get("lastCourses");
-        for(int period = 1; period <= 6; period++){
-            Course course = new Course();
+        for(String period : courses.keySet()){
+            //makes sure that the current object is a class with a grade
+            if(courses.get(period) instanceof LinkedHashMap && ((LinkedHashMap<String,Object>)courses.get(period)).containsKey("gradePercent")){
+                Course course = new Course();
 
-            log(Integer.toString(period));
-            LinkedHashMap<String,Object> courseMap = (LinkedHashMap<String, Object>) courses.get(Integer.toString(period));
-            course.courseName = (String)courseMap.get("courseName");
-            course.frn = (String)courseMap.get("frn");
-            course.gradeLetter = (String)courseMap.get("gradeLetter");
-            course.gradePercent = (String)courseMap.get("gradePercent");
-            course.period = (String)courseMap.get("period");
-            course.teacher = (String)courseMap.get("teacher");
+                log(period);
+                LinkedHashMap<String, Object> courseMap = (LinkedHashMap<String, Object>) courses.get(period);
+                course.courseName = (String) courseMap.get("courseName");
+                course.frn = (String) courseMap.get("frn");
+                course.gradeLetter = (String) courseMap.get("gradeLetter");
+                course.gradePercent = (String) courseMap.get("gradePercent");
+                course.period = (String) courseMap.get("period");
+                course.teacher = (String) courseMap.get("teacher");
 
-            //getting Assignemnts
-            ArrayList<LinkedHashMap<String,Object>> assignmentList = (ArrayList<LinkedHashMap<String, Object>>) ((LinkedHashMap<String, Object>)studentJson.get("lastAssignments")).get(Integer.toString(period));
-            for(LinkedHashMap<String,Object> assignmentMap : assignmentList){
-                Assignment a = new Assignment();
-                a.modifiedDate = (String)assignmentMap.get("modifiedDate");
+                //getting Assignemnts
+                ArrayList<LinkedHashMap<String, Object>> assignmentList = (ArrayList<LinkedHashMap<String, Object>>) ((LinkedHashMap<String, Object>) studentJson.get("lastAssignments")).get(period);
+                for (LinkedHashMap<String, Object> assignmentMap : assignmentList) {
+                    Assignment a = new Assignment();
+                    a.modifiedDate = (String) assignmentMap.get("modifiedDate");
 
-                if(a.modifiedDate != null) {
-                    try {
-                        a.epochDate = new SimpleDateFormat("yyyy-MM-dd").parse(a.modifiedDate).getTime();
-                    } catch (ParseException e) {
-                        e.printStackTrace();
+                    if (a.modifiedDate != null) {
+                        try {
+                            a.epochDate = new SimpleDateFormat("yyyy-MM-dd").parse(a.modifiedDate).getTime();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                     }
+
+                    a.name = (String) assignmentMap.get("name");
+                    if (assignmentMap.containsKey("points")) {
+                        a.points = (Double) assignmentMap.get("points");
+                    }
+                    a.total = (Double) assignmentMap.get("total");
+                    course.assignments.add(a);
                 }
 
-                a.name = (String)assignmentMap.get("name");
-                if(assignmentMap.containsKey("points")) {
-                    a.points = (Double) assignmentMap.get("points");
-                }
-                a.total = (Double)assignmentMap.get("total");
-                course.assignments.add(a);
+                returnStudent.courses.add(course);
             }
-
-            returnStudent.courses.add(course);
         }
 
         Inbox inbox = new Inbox();
