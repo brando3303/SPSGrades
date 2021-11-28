@@ -11,6 +11,8 @@ import com.codename1.ui.Label;
 import com.codename1.ui.animations.CommonTransitions;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.table.TableLayout;
+import com.codename1.ui.util.SwipeBackSupport;
+import com.codename1.util.LazyValue;
 //import com.sun.tools.javac.util.ArrayUtils; // This was giving me an error -Evan
 
 import static com.codename1.ui.CN.log;
@@ -57,6 +59,8 @@ public class Course {
     public Form createCoursePage(){
         classPage = new Form(courseName, BoxLayout.y());
         Utils.setToolbarUIIDForSolidColor(classPage,"TitleArea");
+
+        SwipeBackSupport.bindBack(classPage, args -> Main.getInstance().getGradesForm());
 
         classPage.setTransitionOutAnimator(CommonTransitions.createSlide(CommonTransitions.SLIDE_HORIZONTAL,true, 200));
         classPage.getToolbar().addMaterialCommandToLeftBar("Back",FontImage.MATERIAL_ARROW_BACK_IOS_NEW, 4,

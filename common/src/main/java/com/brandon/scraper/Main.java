@@ -17,6 +17,7 @@ import com.codename1.ui.plaf.Style;
 import com.codename1.ui.plaf.UIManager;
 import com.codename1.ui.table.Table;
 import com.codename1.ui.table.TableLayout;
+import com.codename1.ui.util.SwipeBackSupport;
 import org.littlemonkey.connectivity.Connectivity;
 
 import javax.swing.border.Border;
@@ -375,6 +376,7 @@ public class Main extends Lifecycle {
     private void createInboxForm() {
         inboxForm = new Form("Inbox", BoxLayout.y());
         Utils.setToolbarUIIDForSolidColor(inboxForm,"TitleArea");
+        SwipeBackSupport.bindBack(inboxForm, args -> gradesForm);
         inboxForm.getToolbar().addMaterialCommandToLeftBar("Back", FontImage.MATERIAL_ARROW_BACK_IOS_NEW, 4,
                 e -> {
                     inboxForm.setVisible(false);
