@@ -127,6 +127,7 @@ public class Main extends Lifecycle {
 
     private void createSignInForm() {
         signInForm = new Form("Sign In", BoxLayout.y());
+        Utils.setToolbarUIIDForSolidColor(signInForm,"TitleArea");
         signInForm.setScrollable(false);
 
         //the username field
