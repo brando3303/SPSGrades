@@ -554,7 +554,7 @@ public class Main extends Lifecycle {
     public void updateInboxButtonBadge(){
         //update the badge of the inbox button on the grades form
         if(currentUser.inbox.getNumberOfUndeletedInboxItems() == 0){
-            inboxButton.setText("");
+            inboxButton.setBadgeText("");
             return;
         }
         inboxButton.setBadgeText(Integer.toString(currentUser.inbox.getNumberOfUndeletedInboxItems()));
