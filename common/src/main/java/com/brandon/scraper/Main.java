@@ -214,11 +214,7 @@ public class Main extends Lifecycle {
     //called when a user successfully signs in
     private void createGradesForm() {
         gradesForm = new Form("Grades", BoxLayout.y());
-
-
         Utils.setToolbarUIIDForSolidColor(gradesForm,"TitleArea");
-
-
 
         gradesForm.getToolbar().addMaterialCommandToSideMenu("SignOut",
                 FontImage.MATERIAL_LOGOUT, 4, e -> signOut());
@@ -248,8 +244,8 @@ public class Main extends Lifecycle {
             grade.setUIID("LetterGrade");
             percent.setUIID("Percent");
 
-            //create a functional button which listens for a class tab being clicked
-            Button classSelectButton = new Button();
+            //the button that will take you to the class's assignments
+            Button classSelectButton = new Button(FontImage.MATERIAL_ARROW_FORWARD_IOS);
             classSelectButton.addActionListener(e -> selectClass(sc));
 
             //set the color of the letter grade (unfortunately this is impossible in css alone)
@@ -263,13 +259,17 @@ public class Main extends Lifecycle {
             gradeBox.setUIID("GradePercentV");
 
             //the actual container which holds the contents of each class tab
-            Container grid = new Container(new TableLayout(1, 3));
-            sc.tab = grid;
-            grid.setUIID("GradeGrid");
-            grid.add(nameTeacherBox).add(gradeBox);
-            grid.setLeadComponent(classSelectButton);
+            Container classTable = new Container(new TableLayout(1, 3));
+            sc.tab = classTable;
+            classTable.setUIID("GradeGrid");
+            classTable.add(((TableLayout)classTable.getLayout()).createConstraint().horizontalAlign(Component.LEFT).widthPercentage(70),nameTeacherBox);
+            if(sc.assignments.size() != 0) {
+                classTable.add(((TableLayout)classTable.getLayout()).createConstraint().horizontalAlign(Component.RIGHT), classSelectButton);
+            }
+            classTable.add(((TableLayout)classTable.getLayout()).createConstraint().horizontalAlign(Component.RIGHT),gradeBox);
 
-            gradesForm.add(grid);
+
+            gradesForm.add(classTable);
         }
     }
 
