@@ -257,6 +257,7 @@ public class Main extends Lifecycle {
             gradesForm.setTransitionOutAnimator(null);
             currentUser = ScraperServer.updateUser(currentUser);
             createGradesForm();
+            updateInboxButtonBadge();
             gradesForm.show();
         });
 
