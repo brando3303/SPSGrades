@@ -247,6 +247,7 @@ public class Main extends Lifecycle {
             //the button that will take you to the class's assignments
             Button classSelectButton = new Button(FontImage.MATERIAL_ARROW_FORWARD_IOS);
             classSelectButton.addActionListener(e -> selectClass(sc));
+            classSelectButton.setUIID("CourseArrow");
 
             //set the color of the letter grade (unfortunately this is impossible in css alone)
             grade.getAllStyles().setFgColor(Grade.getGradeColor(Double.parseDouble(sc.gradePercent)));
@@ -262,11 +263,11 @@ public class Main extends Lifecycle {
             Container classTable = new Container(new TableLayout(1, 3));
             sc.tab = classTable;
             classTable.setUIID("GradeGrid");
-            classTable.add(((TableLayout)classTable.getLayout()).createConstraint().horizontalAlign(Component.LEFT).widthPercentage(70),nameTeacherBox);
+            classTable.add(((TableLayout)classTable.getLayout()).createConstraint().horizontalAlign(Component.LEFT).widthPercentage(78),nameTeacherBox);
+            classTable.add(((TableLayout)classTable.getLayout()).createConstraint().horizontalAlign(Component.RIGHT),gradeBox);
             if(sc.assignments.size() != 0) {
                 classTable.add(((TableLayout)classTable.getLayout()).createConstraint().horizontalAlign(Component.RIGHT), classSelectButton);
             }
-            classTable.add(((TableLayout)classTable.getLayout()).createConstraint().horizontalAlign(Component.RIGHT),gradeBox);
 
 
             gradesForm.add(classTable);

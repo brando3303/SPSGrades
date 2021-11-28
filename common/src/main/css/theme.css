@@ -26,7 +26,7 @@ Button {
 /** Style for App Title Bar Text */
 Title {
 
-    font-size: 3mm;
+    font-size: 4mm;
     font-family: "native:MainLight";
     color: white;
     margin: 2.3mm 0 0 0;
@@ -206,3 +206,10 @@ OverallGradeChangeArrow{
 }
 NameAssignmentListTable{}
 
+TitleCommand {
+    color: white;
+}
+
+CourseArrow {
+    color: #636e72;
+}
