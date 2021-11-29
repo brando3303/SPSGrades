@@ -7,6 +7,7 @@ public class Student {
 
     public List<Course> courses;
     public Inbox inbox;
+    public Double GPA;
     private Settings settings;
 
     private String username;
@@ -34,4 +35,15 @@ public class Student {
     public void setSettings(Settings settings){
         this.settings = settings;
     }
+
+//    public Double calculateGPA(){
+//        Double GPA = 0.0;
+//        for(Course c : courses){
+//            GPA += Double.parseDouble(c.gradePercent)/100;
+//        }
+//        GPA = GPA/courses.size()*4;
+//        GPA = Math.round(GPA * 100.0) / 100.0;
+//        this.GPA = GPA;
+//        return GPA;
+//    }
 }

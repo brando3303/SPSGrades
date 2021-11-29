@@ -14,7 +14,8 @@ public enum Grade {
     Cm (ColorUtil.rgb(197,158,6), 70.0,72.99), // Dark yellow -50 darker
     Dp (ColorUtil.rgb(214, 48, 49),67.0, 69.99), // Red
     D (ColorUtil.rgb(214, 48, 49), 60.0,66.99), // Red
-    E (ColorUtil.rgb(214, 48, 49),0.0,59.99); // Red
+    E (ColorUtil.rgb(214, 48, 49),0.0,59.99), // Red
+    NA (ColorUtil.rgb(99, 110, 114),-2.0,0.0); //Grey
 
     private int color;
     private Double max;
@@ -30,6 +31,20 @@ public enum Grade {
     }
 
     public static int getGradeColor(Double percent){
+        for(Grade g : Grade.values()){
+            if(percent >= g.min && percent < g.max){
+                return g.color;
+            }
+        }
+        return 0;
+    }
+
+    public static int getGradeColor(String percentS){
+
+        if(percentS.equals("NA")){
+            return NA.color;
+        }
+        Double percent = Double.parseDouble(percentS);
         for(Grade g : Grade.values()){
             if(percent >= g.min && percent < g.max){
                 return g.color;

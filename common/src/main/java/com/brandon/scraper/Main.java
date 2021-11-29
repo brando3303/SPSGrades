@@ -282,7 +282,7 @@ public class Main extends Lifecycle {
             classSelectButton.setUIID("CourseArrow");
 
             //set the color of the letter grade (unfortunately this is impossible in css alone)
-            grade.getAllStyles().setFgColor(Grade.getGradeColor(Double.parseDouble(sc.gradePercent)));
+            grade.getAllStyles().setFgColor(Grade.getGradeColor(sc.gradePercent));
 
             Container nameTeacherBox = BoxLayout.encloseY(name, teacher);
             nameTeacherBox.setUIID("NameTeacherBox");
@@ -304,6 +304,13 @@ public class Main extends Lifecycle {
 
             gradesForm.add(classTable);
         }
+
+//        Container GPA = new Container();
+//        GPA.setUIID("GradeGrid");
+//        Label GPALabel = new Label("GPA: " + currentUser.GPA);
+//        GPALabel.setUIID("LetterGrade");
+//        GPA.add(GPALabel);
+//        gradesForm.add(GPA);
     }
 
     //called from the class tab container listener when clicked on
@@ -365,15 +372,10 @@ public class Main extends Lifecycle {
             gradesForm.show();
         });
 
-
-        settings.add(new Label("Allow Notifications?"));
-        settings.add(notificationsSwitch);
-        settings.add(applySettingsButton);
-        settings.show();
-
     }
 
     private void createInboxForm() {
+        //setting up title bar
         inboxForm = new Form("Inbox", BoxLayout.y());
         Utils.setToolbarUIIDForSolidColor(inboxForm,"TitleArea");
         SwipeBackSupport.bindBack(inboxForm, args -> gradesForm);
@@ -399,6 +401,7 @@ public class Main extends Lifecycle {
                 });
         for (InboxItem ii : currentUser.inbox.inboxItems) {
             if (!ii.deleted) {
+                //main container
                 log(ii.courseName);
                 Container inboxItemContainer = new Container(new TableLayout(1, 2));
                 inboxItemContainer.setUIID("GradeGrid");
@@ -420,6 +423,8 @@ public class Main extends Lifecycle {
                 Date dif = new Date(Math.abs(new Date().getTime() - ii.time.longValue()*1000));
 
                 int days = Integer.parseInt(new SimpleDateFormat("DD").format(dif));
+                //weird but sufficient fix for Year overflow
+                if(days==365){days=0;}
                 int hours = Integer.parseInt(new SimpleDateFormat("h").format(dif));
                 int minutes =  Integer.parseInt(new SimpleDateFormat("mm").format(dif));
                 int seconds = Integer.parseInt(new SimpleDateFormat("ss").format(dif));
@@ -438,7 +443,7 @@ public class Main extends Lifecycle {
                 Label timeStamp = new Label(timeStampText);
                 timeStamp.setUIID("TimeStampText");
 
-                //list of changed assignments: the assignment name and the way in which it changed
+                //table of changed assignments: the assignment name and the way in which it changed
                 Container assignmentTable = new Container(new TableLayout(ii.assignmentChanges.size(),2));
                 assignmentTable.setUIID("AssignmentChangeTable");
 
@@ -492,20 +497,24 @@ public class Main extends Lifecycle {
 
                 Label newGrade = new Label(ii.gradeNow + "%");
                 newGrade.setUIID("OverallGradeChange");
-                newGrade.getAllStyles().setFgColor(Grade.getGradeColor(Double.parseDouble(ii.gradeNow)), true);
+                newGrade.getAllStyles().setFgColor(Grade.getGradeColor(ii.gradeNow), true);
 
 
                 Label oldGrade = new Label(ii.gradeBefore + "%");
                 oldGrade.setUIID("OverallGradeChange");
-                oldGrade.getAllStyles().setFgColor(Grade.getGradeColor(Double.parseDouble(ii.gradeBefore)), true);
+                oldGrade.getAllStyles().setFgColor(Grade.getGradeColor(ii.gradeBefore), true);
 
                 Label arrowImage = new Label();
                 arrowImage.setUIID("OverallGradeChangeArrow");
-                if(Double.parseDouble(ii.gradeNow) > Double.parseDouble(ii.gradeBefore)){
-                    arrowImage.getAllStyles().setFgColor(Grade.A.getColor());
-                }
-                if(Double.parseDouble(ii.gradeNow) < Double.parseDouble(ii.gradeBefore)){
-                    arrowImage.getAllStyles().setFgColor(Grade.E.getColor());
+                try {
+                    if (Double.parseDouble(ii.gradeNow) > Double.parseDouble(ii.gradeBefore)) {
+                        arrowImage.getAllStyles().setFgColor(Grade.A.getColor());
+                    }
+                    if (Double.parseDouble(ii.gradeNow) < Double.parseDouble(ii.gradeBefore)) {
+                        arrowImage.getAllStyles().setFgColor(Grade.E.getColor());
+                    }
+                } catch(Exception e){
+                    arrowImage.getAllStyles().setFgColor(Grade.NA.getColor());
                 }
                 arrowImage.setMaterialIcon(FontImage.MATERIAL_ARROW_DROP_DOWN);
 
@@ -529,10 +538,12 @@ public class Main extends Lifecycle {
                     inboxForm.show();
                 });
 
+                //adding all of the components to the inbox item container
                 inboxItemContainer.add(((TableLayout)inboxItemContainer.getLayout()).createConstraint().horizontalAlign(Component.LEFT).widthPercentage(87),nameAssignmentListTable);
                 inboxItemContainer.add(((TableLayout)inboxItemContainer.getLayout()).createConstraint().horizontalAlign(Component.RIGHT).widthPercentage(13),overallGradeChanges);
                 //inboxItemContainer.add(delete);
 
+                //add inbox item container to list
                 inboxForm.add(inboxItemContainer);
 
             }
