@@ -36,7 +36,7 @@ public class ScraperServer {
         try {
             Map<String, Object> studentJson = new JSONParser().parseJSON(new InputStreamReader(new ByteArrayInputStream(r.getResponseData()), "UTF-8"));
             //checks that the Json actually contains a Student, rare case that that the login info no longer works in the db
-            if(studentJson.keySet().size() == 0){
+            if(studentJson.containsKey("error")){
                 log("there was an error trying to get this user from the db, probably no matching username");
                 throw new InvalidLoginInfo("no user");
             }
@@ -65,19 +65,9 @@ public class ScraperServer {
         try {
             Map<String, Object> studentJson = new JSONParser().parseJSON(new InputStreamReader(new ByteArrayInputStream(r.getResponseData()), "UTF-8"));
             //checks that the Json actually contains a Student, essentially that that user name cn sign into the source
-
             if(studentJson.containsKey("user")) {
-                log("the user already existed in the database");
+                log("the user already existed in terhe database");
                 return createStudentFromMap((Map<String, Object>) studentJson.get("user"), username, password);
-
-            }
-            else if(studentJson.containsKey("error")){
-                log("there was an error creating this user in the db, likely not connected to a source user");
-                throw new InvalidLoginInfo("no user exists on the source");
-            }
-            else{
-                log("created a new user in the db");
-                return createStudentFromMap(studentJson, username, password);
             }
         } catch (IOException e) {
             e.printStackTrace();
