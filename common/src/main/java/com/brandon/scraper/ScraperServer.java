@@ -219,4 +219,13 @@ public class ScraperServer {
         return null;
 
     }
+
+    public static void sendDeviceID(String username, String deviceID){
+        ConnectionRequest r = new ConnectionRequest();
+        r.setUrl(CREATE_USER);
+        r.addArgument("username", username);
+        r.addArgument("deviceId", deviceID);
+        r.addArgument("secret",SECRETKEY);
+        NetworkManager.getInstance().addToQueue(r);
+    }
 }

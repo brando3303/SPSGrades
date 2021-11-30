@@ -7,6 +7,8 @@ import com.codename1.components.Switch;
 import com.codename1.io.Storage;
 import com.codename1.l10n.ParseException;
 import com.codename1.l10n.SimpleDateFormat;
+import com.codename1.push.Push;
+import com.codename1.push.PushCallback;
 import com.codename1.system.Lifecycle;
 import com.codename1.ui.*;
 import com.codename1.ui.animations.CommonTransitions;
@@ -26,7 +28,7 @@ import java.util.Date;
 import static com.codename1.ui.CN.log;
 
 //needs to implement PushCallback
-public class Main extends Lifecycle {
+public class Main extends Lifecycle implements PushCallback {
     private Form gradesForm;
     private Form inboxForm;
     private Form signInForm;
@@ -37,6 +39,7 @@ public class Main extends Lifecycle {
     boolean signInWarningDisplayed = false;
     private boolean started = false;
     private boolean signedIn = false;
+    private String deviceId;
 
     @Override
     public void start(){
@@ -201,6 +204,9 @@ public class Main extends Lifecycle {
         createGradesForm();
         gradesForm.show();
 
+        if(deviceId != null) {
+            ScraperServer.sendDeviceID(currentUser.getUsername(), deviceId);
+        }
 
         Storage.getInstance().writeObject("userpass", new String[]{currentUser.getUsername(), currentUser.getPassword()});
         Storage.getInstance().writeObject("settings", new String[]{settings.getNotifsOn() ? "on" : "off"});
@@ -572,32 +578,33 @@ public class Main extends Lifecycle {
         inboxButton.setBadgeText(Integer.toString(currentUser.inbox.getNumberOfUndeletedInboxItems()));
     }
 
-    //    @Override
-//    public void push(String value) {
-//        log("push: " + value);
-//
-//        //TODO: find out if this actually works
-//        if (value.startsWith("@69")) {
-//            for (Course sc : currentUser.courses) {
-//                if (value.contains(sc.courseName)) {
-//                    sc.createCoursePage();
-//                    sc.getCoursePage().show();
-//                }
-//            }
-//        }
-//    }
-//
-//    @Override
-//    public void registeredForPush(String deviceID) {
-//        log("this device was registered");
-//        Dialog.show("congratulations!!", "you were registered for push notifications", "ok", null);
-//        //USE Push.getPushKey()
-//        //TODO: register new devices with the server
-//        //ServerScraper.registerForPush(deviceID);
-//    }
-//
-//    @Override
-//    public void pushRegistrationError(String s, int i) {
-//
-//    }
+    @Override
+    public void push(String value) {
+        log("push: " + value);
+
+        //TODO: find out if this actually works
+        if (value.startsWith("@69")) {
+            for (Course sc : currentUser.courses) {
+                if (value.contains(sc.courseName)) {
+                    sc.createCoursePage();
+                    sc.getCoursePage().show();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void registeredForPush(String s) {
+
+        if(started && signedIn){
+            ScraperServer.sendDeviceID(currentUser.getUsername(), Push.getPushKey());
+        }
+        deviceId = Push.getPushKey();
+        log("this device was registered. Device ID: " + deviceId );
+    }
+
+    @Override
+    public void pushRegistrationError(String s, int i) {
+
+    }
 }
