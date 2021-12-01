@@ -84,7 +84,7 @@ public class ScraperServer {
         for(String period : courses.keySet()){
             //makes sure that the current object is a class with a grade
             if(courses.get(period) instanceof LinkedHashMap && ((LinkedHashMap<String,Object>)courses.get(period)).containsKey("gradePercent")){
-                Course course = new Course();
+                Course course = new Course(returnStudent);
 
                 log(period);
                 LinkedHashMap<String, Object> courseMap = (LinkedHashMap<String, Object>) courses.get(period);
@@ -161,7 +161,7 @@ public class ScraperServer {
                     }
                 }
 
-                inbox.inboxItems.add(item);
+                inbox.getInboxItems().add(item);
             }
         }
         returnStudent.inbox = inbox;

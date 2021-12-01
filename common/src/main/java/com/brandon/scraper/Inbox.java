@@ -6,8 +6,14 @@ import java.util.Collections;
 import java.util.Iterator;
 
 public class Inbox {
-    ArrayList<InboxItem> inboxItems;
 
+
+
+    private ArrayList<InboxItem> inboxItems;
+
+    public ArrayList<InboxItem> getInboxItems() {
+        return inboxItems;
+    }
     public Inbox(){
         inboxItems = new ArrayList<>();
     }

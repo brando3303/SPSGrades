@@ -1,25 +1,12 @@
 package com.brandon.scraper;
 
-import com.codename1.charts.util.ColorUtil;
-import com.codename1.components.SpanLabel;
-import com.codename1.l10n.ParseException;
-import com.codename1.l10n.SimpleDateFormat;
+import com.brandon.scraper.formController.CourseFC;
 import com.codename1.ui.Container;
-import com.codename1.ui.FontImage;
-import com.codename1.ui.Form;
-import com.codename1.ui.Label;
-import com.codename1.ui.animations.CommonTransitions;
-import com.codename1.ui.layouts.BoxLayout;
-import com.codename1.ui.table.TableLayout;
-import com.codename1.ui.util.SwipeBackSupport;
-import com.codename1.util.LazyValue;
-//import com.sun.tools.javac.util.ArrayUtils; // This was giving me an error -Evan
-
-import static com.codename1.ui.CN.log;
 
 import java.util.*;
 
 public class Course {
+    private Student courseOwner;
 
     public String courseName;
     public String frn;
@@ -30,21 +17,19 @@ public class Course {
 
     public List<Assignment> assignments;
 
-
-
-    private Form classPage;
+    private CourseFC courseFC;
     public Container tab;
 
-
-    public Course(){
+    public Course(Student courseOwner){
 
         assignments = new ArrayList<>();
-
+        this.courseOwner = courseOwner;
+        courseFC = new CourseFC(Main.getInstance(),this);
 
     }
 
-    public Form getCoursePage(){
-        return classPage;
+    public CourseFC getCourseFormC(){
+        return courseFC;
 
     }
 
@@ -53,46 +38,6 @@ public class Course {
             return "NA";
         }
         return Math.round((points/total)*10000)/100.0 + "%";
-    }
-
-    //creates new form which contains the assignments for this class
-    public Form createCoursePage(){
-        classPage = new Form(courseName, BoxLayout.y());
-        Utils.setToolbarUIIDForSolidColor(classPage,"TitleArea");
-
-        SwipeBackSupport.bindBack(classPage, args -> Main.getInstance().getGradesForm());
-
-        classPage.setTransitionOutAnimator(CommonTransitions.createSlide(CommonTransitions.SLIDE_HORIZONTAL,true, 200));
-        classPage.getToolbar().addMaterialCommandToLeftBar("Back",FontImage.MATERIAL_ARROW_BACK_IOS_NEW, 4,
-                e -> {
-            classPage.setVisible(false);
-            Main.getInstance().getGradesForm().show();
-        });
-
-        for(Assignment a : assignments){
-            SpanLabel name = new SpanLabel(a.name);
-            Label points = new Label(a.points != null ? "" + a.points : "NA");
-            Label total = new Label("" + a.total);
-            Label percent = new Label(getPercentString(a.total, a.points));
-
-            if(a.points != null || a.total == 0) {
-                percent.getAllStyles().setFgColor(Grade.getGradeColor(a.points/a.total*100));
-            }
-            else{percent.getAllStyles().setFgColor(ColorUtil.GRAY);};
-
-
-            Container gradeBox = BoxLayout.encloseY(points, total);
-            gradeBox.setUIID("GradePercentV");
-
-
-            Container assignmentTab = new Container( new TableLayout(1,2));
-            assignmentTab.setUIID("GradeGrid");
-
-            assignmentTab.add(percent).add(name);
-
-            classPage.add(assignmentTab);
-        }
-        return classPage;
     }
 
     //this is convoluted and frankly I dont care
