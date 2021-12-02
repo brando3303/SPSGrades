@@ -81,18 +81,17 @@ public class InboxFC extends FormController {
                 int days = Integer.parseInt(new SimpleDateFormat("DD").format(dif)) - 1;
                 int hours = Integer.parseInt(new SimpleDateFormat("H").format(dif));
                 int minutes =  Integer.parseInt(new SimpleDateFormat("mm").format(dif));
-                int seconds = Integer.parseInt(new SimpleDateFormat("ss").format(dif));
                 String timeStampText;
-                if(days >= 1){
+                if(days > 1){
                     timeStampText = days + " days ago";
-                } else if(hours >= 2){
+                } else if(days == 1){
+                    timeStampText = days + " day ago";
+                } else if(hours > 1){
                     timeStampText = hours + " hrs ago";
-                } else if(minutes >= 5){
-                    timeStampText = minutes + " mins ago";
-                } else if(minutes == 0){
-                    timeStampText = seconds + " secs ago";
+                }else if(hours == 1){
+                    timeStampText = hours + " hour ago";
                 } else{
-                    timeStampText = minutes + " mins, " + seconds + " secs ago";
+                    timeStampText = minutes + " mins ago";
                 }
                 Label timeStamp = new Label(timeStampText);
                 timeStamp.setUIID("TimeStampText");
