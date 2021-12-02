@@ -74,12 +74,12 @@ public class InboxFC extends FormController {
                 courseName.setUIID("InboxItemClassName");
 
                 //timestamp text: how long ago the change was detected "2 hrs"
-                Date dif = new Date(Math.abs(new Date().getTime() - ii.time.longValue()*1000));
+                //the number at the end is the convertion from pst to gmt
+                Date dif = new Date(Math.abs(new Date().getTime() - ii.time.longValue()*1000) + 8*60*60*1000);
 
-                int days = Integer.parseInt(new SimpleDateFormat("DD").format(dif));
-                //weird but sufficient fix for Year overflow
-                if(days==365){days=0;}
-                int hours = Integer.parseInt(new SimpleDateFormat("h").format(dif));
+                //minus one because "DD" is days in the year starting with 1
+                int days = Integer.parseInt(new SimpleDateFormat("DD").format(dif)) - 1;
+                int hours = Integer.parseInt(new SimpleDateFormat("H").format(dif));
                 int minutes =  Integer.parseInt(new SimpleDateFormat("mm").format(dif));
                 int seconds = Integer.parseInt(new SimpleDateFormat("ss").format(dif));
                 String timeStampText;

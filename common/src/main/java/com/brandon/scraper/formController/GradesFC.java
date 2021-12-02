@@ -49,7 +49,7 @@ public class GradesFC extends FormController{
             }
             gradesForm.setTransitionOutAnimator(null);
             this.getApp().setCurrentUser(ScraperServer.updateUser(this.getApp().getCurrentUser()));
-            createGradesForm();
+            this.start();
             this.getApp().getInboxFC().start();
             updateInboxButtonBadge();
             gradesForm.show();
