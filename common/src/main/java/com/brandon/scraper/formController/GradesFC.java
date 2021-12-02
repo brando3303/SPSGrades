@@ -51,8 +51,8 @@ public class GradesFC extends FormController{
             this.getApp().setCurrentUser(ScraperServer.updateUser(this.getApp().getCurrentUser()));
             this.start();
             this.getApp().getInboxFC().start();
-            updateInboxButtonBadge();
-            gradesForm.show();
+            this.show();
+
         });
 
         //create a class tab for every class in the current student
