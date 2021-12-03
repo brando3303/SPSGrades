@@ -53,10 +53,14 @@ public class InboxFC extends FormController {
                     }
                     app.getGradesFC().updateInboxButtonBadge();
                 });
+        if(currentUser.inbox.getNumberOfUndeletedInboxItems() == 0){
+            inboxForm.add(new Label("Looks like you have no inbox items."));
+        }
         for (InboxItem ii : currentUser.inbox.getInboxItems()) {
             if (!ii.shouldShow()) {
                 continue;
             }
+
             //main container
             log(ii.courseName);
             Container inboxItemContainer = new Container(new TableLayout(1, 2));
