@@ -54,7 +54,7 @@ public enum Grade {
     }
     
     public static int getGradeColorFromFraction(Double points, Double total){
-        if(total == 0){
+        if(total == 0 || points == null){
             return A.color;
         }
         return getGradeColor(points/total*100);

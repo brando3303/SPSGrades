@@ -146,7 +146,7 @@ public class ScraperServer {
                         if (ac.type.equals("modified")) {
                             ac.pointsBefore = (Double) acMap.get("pointsBefore");
                             ac.pointsNow = (Double) acMap.get("pointsNow");
-                        } else if (ac.type.equals("created")) {
+                        } else if (ac.type.equals("created") && acMap.containsKey("points")) {
                             ac.points = (Double) acMap.get("points");
                         }
                         ac.total = (Double) acMap.get("total");

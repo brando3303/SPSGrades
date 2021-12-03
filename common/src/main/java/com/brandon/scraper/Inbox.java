@@ -44,7 +44,7 @@ public class Inbox {
     public int getNumberOfUndeletedInboxItems(){
         int i = 0;
         for(InboxItem ii : inboxItems){
-            if(!ii.deleted){
+            if(!ii.deleted && ii.shouldShow()){
                 i++;
             }
         }

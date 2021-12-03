@@ -17,4 +17,20 @@ public class InboxItem {
     public InboxItem(){
         assignmentChanges = new ArrayList<>();
     }
+
+    public boolean shouldShow(){
+        if(deleted){
+            return false;
+        }
+        int numNullPoints = 0;
+        for(AssignmentChange ac : assignmentChanges){
+            if(ac.points == null){
+                numNullPoints++;
+            }
+        }
+        if(numNullPoints == assignmentChanges.size()){
+            return false;
+        }
+        return true;
+    }
 }
