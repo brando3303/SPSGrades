@@ -9,9 +9,9 @@ public enum Grade {
     Bp (ColorUtil.rgb(0, 206, 201), 87.0, 89.99), // Turquoise
     B (ColorUtil.rgb(116, 185, 255), 83.0, 86.99), // Light blue
     Bm (ColorUtil.rgb(9, 132, 227), 80.0, 82.99), // Dark blue
-    Cp (ColorUtil.rgb(197,158,6),77.0,79.99), // Dark yellow -50 darker
-    C (ColorUtil.rgb(197,158,6), 73.0,76.99), // Dark yellow -50 darker
-    Cm (ColorUtil.rgb(197,158,6), 70.0,72.99), // Dark yellow -50 darker
+    Cp (ColorUtil.rgb(225, 112, 85),77.0,79.99), // Orange
+    C (ColorUtil.rgb(225, 112, 85), 73.0,76.99), // Orange
+    Cm (ColorUtil.rgb(225, 112, 85), 70.0,72.99), // Orange
     Dp (ColorUtil.rgb(214, 48, 49),67.0, 69.99), // Red
     D (ColorUtil.rgb(214, 48, 49), 60.0,66.99), // Red
     E (ColorUtil.rgb(214, 48, 49),0.0,59.99), // Red
