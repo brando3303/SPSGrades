@@ -55,7 +55,9 @@ public class InboxFC extends FormController {
                 });
 
         if(currentUser.inbox.getNumberOfUndeletedInboxItems() == 0){
-            inboxForm.add(new Label("Looks like you have no inbox items."));
+            Label message = new Label("Grade changes will appear here.");
+            message.setUIID("EmptyInboxMessage");
+            inboxForm.add(message);
             return this.form;
         }
 

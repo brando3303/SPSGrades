@@ -237,3 +237,7 @@ PullToRefresh {
     font-family: "native:MainLight";
     font-size: 3mm;
 }
+EmptyInboxMessage {
+    color: #2d3436;
+    margin: 3mm 5mm;
+}
