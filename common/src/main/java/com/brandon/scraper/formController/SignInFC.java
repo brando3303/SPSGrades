@@ -89,7 +89,7 @@ public class SignInFC extends FormController{
         loadingBar.setMessage("Loading User");
         loadingBar.setProgress(0);
         loadingBar.show();
-        //loadingBar.setUiid("LoadingBar");
+        loadingBar.setUiid("LoadingBar");
         try {
             app.setCurrentUser(ScraperServer.createNewUser(user, pass, loadingStudent -> {
                 log("ran the progress update");

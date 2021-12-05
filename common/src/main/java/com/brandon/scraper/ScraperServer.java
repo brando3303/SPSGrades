@@ -5,6 +5,7 @@ import com.codename1.io.JSONParser;
 import com.codename1.io.NetworkManager;
 import com.codename1.l10n.ParseException;
 import com.codename1.l10n.SimpleDateFormat;
+import com.codename1.ui.Dialog;
 import com.codename1.util.StringUtil;
 
 import java.io.ByteArrayInputStream;
@@ -30,7 +31,10 @@ public class ScraperServer {
 
 
     public static Student getStudentFromDataBase(String username, String password) throws InvalidLoginInfo{
-        ConnectionRequest r = new ConnectionRequest();
+        ConnectionRequest r = new ConnectionRequest(){
+            @Override
+            protected void handleErrorResponseCode(int code, String message) {}
+        };
         r.setUrl(StringUtil.replaceAll(GET_USER,"USERNAME",username) + "&secret=" + SECRETKEY);
         r.setPost(false);
         NetworkManager.getInstance().addToQueueAndWait(r);
@@ -49,7 +53,10 @@ public class ScraperServer {
     }
 
     public static Student createNewUser(String username, String password, ProgressUpdateRunnable pur) throws InvalidLoginInfo{
-        ConnectionRequest r = new ConnectionRequest();
+        ConnectionRequest r = new ConnectionRequest(){
+            @Override
+            protected void handleErrorResponseCode(int code, String message) {}
+        };
         r.setUrl(CREATE_USER);
         r.addArgument("username", username);
         r.addArgument("pwd",password);
@@ -76,7 +83,10 @@ public class ScraperServer {
     }
 
     private static Student loadNewUser(ProgressUpdateRunnable pur, Student incompleteStudent){
-        ConnectionRequest r = new ConnectionRequest();
+        ConnectionRequest r = new ConnectionRequest(){
+            @Override
+            protected void handleErrorResponseCode(int code, String message) {}
+        };
         r.setUrl(LOAD_USER_ASSIGNMENTS);
         r.addArgument("username", incompleteStudent.getUsername());
         r.addArgument("secret",SECRETKEY);
@@ -89,6 +99,8 @@ public class ScraperServer {
             studentJson = new JSONParser().parseJSON(new InputStreamReader(new ByteArrayInputStream(r.getResponseData()), "UTF-8"));
         } catch (IOException e) {
             e.printStackTrace();
+            Dialog.show("There was an unknown error","There was an unknown error");
+            return null;
         }
 
         return createStudentFromMap(studentJson, incompleteStudent.getUsername(), incompleteStudent.getPassword());
@@ -205,7 +217,10 @@ public class ScraperServer {
 
     public static void deleteInboxItem(InboxItem item, Student student){
         String link = DELETE_INBOX_ITEM;
-        ConnectionRequest r = new ConnectionRequest();
+        ConnectionRequest r = new ConnectionRequest(){
+            @Override
+            protected void handleErrorResponseCode(int code, String message) {}
+        };
         r.setPost(true);
         r.setUrl(link);
         r.addArgument("username", student.getUsername());
@@ -217,7 +232,10 @@ public class ScraperServer {
 
     public static void deactivateUser(Student student){
         String link = DEACTIVATE_USER;
-        ConnectionRequest r = new ConnectionRequest();
+        ConnectionRequest r = new ConnectionRequest(){
+            @Override
+            protected void handleErrorResponseCode(int code, String message) {}
+        };
         r.setPost(true);
         r.setUrl(link);
         r.addArgument("username", student.getUsername());
@@ -228,7 +246,10 @@ public class ScraperServer {
 
     public static Student updateUser(Student student){
         String link = UPDATE_USER;
-        ConnectionRequest r = new ConnectionRequest();
+        ConnectionRequest r = new ConnectionRequest(){
+            @Override
+            protected void handleErrorResponseCode(int code, String message) {}
+        };
         r.setPost(true);
         r.setUrl(link);
         r.addArgument("username", student.getUsername());
@@ -247,7 +268,10 @@ public class ScraperServer {
     }
 
     public static void sendDeviceID(String username, String deviceID){
-        ConnectionRequest r = new ConnectionRequest();
+        ConnectionRequest r = new ConnectionRequest(){
+            @Override
+            protected void handleErrorResponseCode(int code, String message) {}
+        };
         r.setUrl(CREATE_USER);
         r.addArgument("username", username);
         r.addArgument("deviceId", deviceID);
