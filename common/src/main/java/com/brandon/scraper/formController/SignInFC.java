@@ -105,7 +105,7 @@ public class SignInFC extends FormController{
                     }
                     period++;
                 }
-
+                loadingBar.clear();
             }));
         } catch (InvalidLoginInfo e) {
             log("error caught while trying to sign in with a new userefsffdfdssfdsfdsfsfdw");
