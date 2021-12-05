@@ -44,6 +44,9 @@ public class InboxFC extends FormController {
         inboxForm.getToolbar().addMaterialCommandToRightBar("Clear", FontImage.MATERIAL_CLEAR_ALL, 4,
                 e -> {
                     inboxForm.removeAll();
+                    Label message = new Label("Grade changes will appear here.");
+                    message.setUIID("EmptyInboxMessage");
+                    inboxForm.add(message);
                     inboxForm.show();
                     for (InboxItem ii : currentUser.inbox.getInboxItems()) {
                         if (!ii.deleted) {
@@ -51,6 +54,7 @@ public class InboxFC extends FormController {
                             ii.deleted = true;
                         }
                     }
+
                     app.getGradesFC().updateInboxButtonBadge();
                 });
 
