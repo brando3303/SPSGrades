@@ -37,7 +37,7 @@ public class GradesFC extends FormController{
         inboxButton.addActionListener(e -> this.getApp().getInboxFC().show());
         inboxButton.setMaterialIcon(FontImage.MATERIAL_UPDATE);
         gradesForm.getToolbar().add(BorderLayout.EAST, inboxButton);
-        int numItems = currentUser.inbox.getNumberOfUndeletedInboxItems();
+        int numItems = currentUser.getAllAssignmentChanges(false).size();
         if (numItems > 0) {
             inboxButton.setBadgeText(Integer.toString(numItems));
             inboxButton.setBadgeUIID("InboxButtonBadge");
@@ -123,10 +123,10 @@ public class GradesFC extends FormController{
 
     public void updateInboxButtonBadge(){
         //update the badge of the inbox button on the grades form
-        if(this.getApp().getCurrentUser().inbox.getNumberOfUndeletedInboxItems() == 0){
+        if(this.getApp().getCurrentUser().getAllAssignmentChanges(false).size() == 0){
             inboxButton.setBadgeText("");
             return;
         }
-        inboxButton.setBadgeText(Integer.toString(this.getApp().getCurrentUser().inbox.getNumberOfUndeletedInboxItems()));
+        inboxButton.setBadgeText(Integer.toString(this.getApp().getCurrentUser().getAllAssignmentChanges(false).size()));
     }
 }

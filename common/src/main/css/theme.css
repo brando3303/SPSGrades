@@ -174,23 +174,21 @@ CreatedAssignmentChange{
     margin: 0;
     padding: 0;
 }
-ModifiedAssignmentChange{
+AssignmentChangeLabel{
      font-size: 2mm;
      margin: 0;
-     padding: 0;
+     padding: 0 1mm 0 1mm;
+    font-family: "native:MainLight";
  }
 NewAssignmentGrade{
     font-size: 2.5mm;
 }
 
-AssignmentGradeChangeContainer{}
-AssignmentGradeChange{
-    font-size: 2.5mm;
-
+AssignmentGradeChangeContainer{
     margin: 0;
     padding: 0;
 }
-AssignmentGradeChangeArrow{
+AssignmentChangeArrow{
 
     font-size: 3mm;
     margin: 0;

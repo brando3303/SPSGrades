@@ -16,6 +16,7 @@ public class Course {
     public String teacher;
 
     public List<Assignment> assignments;
+    public ArrayList<AssignmentChange> assignmentChanges;
 
     private CourseFC courseFC;
     public Container tab;
@@ -23,6 +24,7 @@ public class Course {
     public Course(Student courseOwner){
 
         assignments = new ArrayList<>();
+        assignmentChanges = new ArrayList<>();
         this.courseOwner = courseOwner;
         courseFC = new CourseFC(Main.getInstance(),this);
 
@@ -62,5 +64,16 @@ public class Course {
         Collections.reverse(sortedAssignments);
         assignments = sortedAssignments;
 
+    }
+
+    public Double getLowestOverallGradeInbox(){
+        Double lowest = 1010.;
+        for(AssignmentChange ac : assignmentChanges){
+            //TODO handle a null lowest value
+            if(Double.parseDouble(ac.overallGradeBefore) < lowest){
+                lowest = Double.parseDouble(ac.overallGradeBefore);
+            }
+        }
+        return lowest;
     }
 }

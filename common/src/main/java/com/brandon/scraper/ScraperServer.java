@@ -128,26 +128,20 @@ public class ScraperServer {
                 if (studentJson.containsKey("lastAssignments") && ((LinkedHashMap<String,Object>)studentJson.get("lastAssignments")).keySet().size() > 1) {
                     ArrayList<LinkedHashMap<String, Object>> assignmentList = (ArrayList<LinkedHashMap<String, Object>>) ((LinkedHashMap<String, Object>) studentJson.get("lastAssignments")).get(period);
                     course.assignments = deserializeSingleCourseAssignments(assignmentList);
+                    course.sortAssignments();
                 }
-                course.sortAssignments();
-                returnStudent.courses.add(course);
-            }
-        }
-        //deserialize the inbox
-        if(studentJson.containsKey("inbox")) {
-            LinkedHashMap<String, Object> inboxMap = (LinkedHashMap<String, Object>) studentJson.get("inbox");
-            returnStudent.inbox = deserializeInbox(inboxMap);
-            returnStudent.inbox.sortInboxItems();
-            //give each inbox item a reference to it's course
-            for(InboxItem ii : returnStudent.inbox.getInboxItems()) {
-                for (Course c : returnStudent.courses) {
-                    if (ii.courseName.equals(c.courseName)) {
-                        ii.course = c;
+                if (studentJson.containsKey("inbox") && ((LinkedHashMap<String,Object>)studentJson.get("inbox")).containsKey(period) && ((LinkedHashMap<String,Object>)studentJson.get("inbox")).keySet().size() > 1){
+                    LinkedHashMap<String, Object> assignmentList = (LinkedHashMap<String, Object>) ((LinkedHashMap<String, Object>) studentJson.get("inbox")).get(period);
+                    course.assignmentChanges = deserializeCourseInbox(assignmentList);
+                    log("got here");
+                    for(AssignmentChange ac : course.assignmentChanges){
+                        ac.course = course;
                     }
                 }
+                returnStudent.courses.add(course);
+
+
             }
-        } else{
-            returnStudent.inbox = new Inbox();
         }
         //returnStudent.calculateGPA();
         return returnStudent;
@@ -177,58 +171,51 @@ public class ScraperServer {
         return returnAssignments;
     }
 
-    private static Inbox deserializeInbox(LinkedHashMap<String,Object> inboxMap){
-        Inbox returnInbox = new Inbox();
+    private static ArrayList<AssignmentChange> deserializeCourseInbox(LinkedHashMap<String,Object> inboxMap){
+        ArrayList<AssignmentChange> assignmentChanges = new ArrayList<>();
         Set<String> set = inboxMap.keySet();
         for (String s : set) {
             LinkedHashMap<String, Object> inboxItemMap = (LinkedHashMap<String, Object>) inboxMap.get(s);
-            InboxItem item = new InboxItem();
+            AssignmentChange assignmentChange = new AssignmentChange();
 
-            item.index = s;
-            item.courseName = (String) inboxItemMap.get("courseName");
-            item.deleted = inboxItemMap.get("deleted") == "true";
-            item.gradeBefore = (String) inboxItemMap.get("gradeBefore");
-            item.gradeNow = (String) inboxItemMap.get("gradeNow");
-            item.time = (Double) inboxItemMap.get("time");
-            item.timeReadable = (String) inboxItemMap.get("timeReadable");
-
-            ArrayList<LinkedHashMap<String, Object>> assignmentChangesMap = (ArrayList<LinkedHashMap<String, Object>>) inboxItemMap.get("assignmentChanges");
-            if (assignmentChangesMap != null) {
-                for (LinkedHashMap<String, Object> acMap : assignmentChangesMap) {
-                    AssignmentChange ac = new AssignmentChange();
-                    ac.name = (String) acMap.get("name");
-                    ac.type = (String) acMap.get("type");
-                    if (ac.type.equals("modified")) {
-                        ac.pointsBefore = (Double) acMap.get("pointsBefore");
-                        ac.pointsNow = (Double) acMap.get("pointsNow");
-                    } else if (ac.type.equals("created") && acMap.containsKey("points")) {
-                        ac.points = (Double) acMap.get("points");
-                    }
-                    ac.total = (Double) acMap.get("total");
-
-                    item.assignmentChanges.add(ac);
-                }
+            assignmentChange.assignmentChangeType = (String)inboxItemMap.get("assignmentChangeType");
+            assignmentChange.assignmentName = (String)inboxItemMap.get("courseName");
+            assignmentChange.assignmentTotal = (Double)inboxItemMap.get("assignmentTotal");
+            assignmentChange.courseName = (String) inboxItemMap.get("courseName");
+            assignmentChange.deleted = inboxItemMap.get("deleted") == "true";
+            assignmentChange.id = s;
+            assignmentChange.overallGradeBefore = (String) inboxItemMap.get("overallGradeBefore");
+            assignmentChange.overallGradeNow = (String) inboxItemMap.get("gradeNow");
+            assignmentChange.time = (Double) inboxItemMap.get("time");
+            assignmentChange.timeReadable = (String) inboxItemMap.get("timeReadable");
+            if(assignmentChange.assignmentChangeType.equals("created")){
+                assignmentChange.assignmentPoints = (Double)inboxItemMap.get("assignmentPoints");
             }
-            returnInbox.getInboxItems().add(item);
+            if(assignmentChange.assignmentChangeType.equals("modified")){
+                assignmentChange.assignmentPointsBefore = (Double)inboxItemMap.get("assignmentPointsBefore");
+                assignmentChange.assignmentPointsNow = (Double)inboxItemMap.get("assignmentPointsNow");
+            }
+            assignmentChanges.add(assignmentChange);
+
         }
-        return returnInbox;
+        return assignmentChanges;
     }
 
 
-    public static void deleteInboxItem(InboxItem item, Student student){
-        String link = DELETE_INBOX_ITEM;
-        ConnectionRequest r = new ConnectionRequest(){
-            @Override
-            protected void handleErrorResponseCode(int code, String message) {}
-        };
-        r.setPost(true);
-        r.setUrl(link);
-        r.addArgument("username", student.getUsername());
-        r.addArgument("id", item.index);
-        r.addArgument("secret", SECRETKEY);
-        log(NetworkManager.getInstance().isQueueIdle() ? "queue idle": "queue is not idle");
-        NetworkManager.getInstance().addToQueue(r);
-    }
+//    public static void deleteInboxItem(InboxItem item, Student student){
+//        String link = DELETE_INBOX_ITEM;
+//        ConnectionRequest r = new ConnectionRequest(){
+//            @Override
+//            protected void handleErrorResponseCode(int code, String message) {}
+//        };
+//        r.setPost(true);
+//        r.setUrl(link);
+//        r.addArgument("username", student.getUsername());
+//        r.addArgument("id", item.index);
+//        r.addArgument("secret", SECRETKEY);
+//        log(NetworkManager.getInstance().isQueueIdle() ? "queue idle": "queue is not idle");
+//        NetworkManager.getInstance().addToQueue(r);
+//    }
 
     public static void deactivateUser(Student student){
         String link = DEACTIVATE_USER;

@@ -6,7 +6,6 @@ import java.util.List;
 public class Student {
 
     public List<Course> courses;
-    public Inbox inbox;
     public Double GPA;
     private Settings settings;
 
@@ -46,4 +45,25 @@ public class Student {
 //        this.GPA = GPA;
 //        return GPA;
 //    }
+
+    public ArrayList<AssignmentChange> getAllAssignmentChanges(boolean deletedToo) {
+
+        ArrayList<AssignmentChange> a = new ArrayList<>();
+        if (deletedToo) {
+            for (Course c : courses) {
+                for (AssignmentChange ac : c.assignmentChanges) {
+                    a.add(ac);
+                }
+            }
+        }
+        for (Course c : courses) {
+            for (AssignmentChange ac : c.assignmentChanges) {
+                if(!ac.deleted ) {
+                    a.add(ac);
+                }
+            }
+        }
+
+        return a;
+    }
 }

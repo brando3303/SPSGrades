@@ -8,7 +8,6 @@ import com.codename1.ui.animations.CommonTransitions;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.table.TableLayout;
 import com.codename1.ui.util.SwipeBackSupport;
-import org.littlemonkey.connectivity.Connectivity;
 
 import java.util.Date;
 
@@ -48,36 +47,44 @@ public class InboxFC extends FormController {
                     message.setUIID("EmptyInboxMessage");
                     inboxForm.add(message);
                     inboxForm.show();
-                    for (InboxItem ii : currentUser.inbox.getInboxItems()) {
-                        if (!ii.deleted) {
-                            ScraperServer.deleteInboxItem(ii, currentUser);
-                            ii.deleted = true;
+                    for (AssignmentChange ac : currentUser.getAllAssignmentChanges(false)) {
+                        if (!ac.deleted) {
+                            //TODO: fix delete inbox item
+                            //ScraperServer.deleteInboxItem(ii, currentUser);
+                            ac.deleted = true;
                         }
                     }
 
                     app.getGradesFC().updateInboxButtonBadge();
                 });
 
-        if(currentUser.inbox.getNumberOfUndeletedInboxItems() == 0){
+        //if there are no inbox items
+        if(currentUser.getAllAssignmentChanges(false).size() == 0){
             Label message = new Label("Grade changes will appear here.");
             message.setUIID("EmptyInboxMessage");
             inboxForm.add(message);
             return this.form;
         }
 
-        for (InboxItem ii : currentUser.inbox.getInboxItems()) {
-            if (!ii.shouldShow()) {
-                continue;
+        //for each inbox item
+//        for (InboxItem ii : currentUser.inbox.getInboxItems()) {
+//            if (!ii.shouldShow()) {
+//                continue;
+//            }
+//            inboxForm.add(createInboxItemComponent(ii));
+//        }
+        for(Course c : currentUser.courses){
+            if(c.assignmentChanges.size() != 0){
+                this.form.add(createCourseInboxItemComponent(c));
             }
-            inboxForm.add(createInboxItemComponent(ii));
         }
         return this.form;
     }
 
-    private Component createInboxItemComponent(InboxItem ii){
+    private Component createCourseInboxItemComponent(Course course){
         //main container
-        log(ii.courseName);
-        Container inboxItemContainer = new Container(new TableLayout(1, 2));
+        log(course.courseName);
+        Container inboxItemContainer = BoxLayout.encloseY();
         inboxItemContainer.setUIID("GradeGrid");
 
         //selectable name: the name of the class which has been changed
@@ -85,17 +92,120 @@ public class InboxFC extends FormController {
         Button selectInboxItem = new Button();
         selectInboxItem.addActionListener(e -> {
             log("you clicked on an inbox item!!!");
-            this.getApp().getGradesFC().selectClass(ii.course);
+            this.getApp().getGradesFC().selectClass(course);
 
         });
         selectableText.setLeadComponent(selectInboxItem);
-        Label courseName = new Label(ii.courseName);
+        Label courseName = new Label(course.courseName);
         selectableText.add(courseName);
-        courseName.setUIID("InboxItemClassName");
+        courseName.setUIID("CourseName");
 
-        //timestamp text: how long ago the change was detected "2 hrs"
-        //the number at the end is the convertion from pst to gmt (8 hours off)
-        Date dif = new Date(Math.abs(new Date().getTime() - ii.time.longValue()*1000) + 8*60*60*1000);
+        //table of changed assignments: the assignment name and the way in which it changed
+        Container assignmentTable = new Container(new TableLayout(course.assignmentChanges.size(),3));
+        assignmentTable.setUIID("AssignmentChangeTable");
+
+        for(AssignmentChange ac : course.assignmentChanges){
+            if(!ac.showDisplay()){
+                continue;
+            }
+
+            SpanLabel assignmentNameLabel = new SpanLabel(ac.assignmentName + ":");
+            assignmentNameLabel.setTextUIID("AssignmentChangeLabel");
+            assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Component.LEFT).widthPercentage(40),assignmentNameLabel);
+
+
+
+            if(ac.assignmentChangeType.equals("created") && ac.assignmentPoints != null){
+
+                Label newAssignmentGradeLabel = new Label(Utils.intify(ac.assignmentPoints) + "/" + Utils.intify(ac.assignmentTotal));
+                newAssignmentGradeLabel.setUIID("AssignmentChangeLabel");
+                newAssignmentGradeLabel.getAllStyles().setFgColor(Grade.getGradeColorFromFraction(ac.assignmentPoints, ac.assignmentTotal), true);
+                assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Component.LEFT).widthPercentage(40), newAssignmentGradeLabel);
+            }
+            else if(ac.assignmentChangeType.equals("modified")){
+
+                Container assignmentGradeChange = new Container(new TableLayout(1,3));
+                assignmentGradeChange.setUIID("AssignmentGradeChangeContainer");
+
+                Label oldGrade = new Label(Utils.intify(ac.assignmentPointsBefore) + "/" + Utils.intify(ac.assignmentTotal));
+                oldGrade.setUIID("AssignmentChangeLabel");
+                oldGrade.getAllStyles().setFgColor(Grade.getGradeColorFromFraction(ac.assignmentPointsBefore, ac.assignmentTotal), true);
+
+                // Label newGrade = new Label(ac.pointsNow + "/" + ac.total);
+                Label newGrade = new Label(Utils.intify(ac.assignmentPointsNow) + "/" + Utils.intify(ac.assignmentTotal));
+                newGrade.setUIID("AssignmentChangeLabel");
+                newGrade.getAllStyles().setFgColor(Grade.getGradeColorFromFraction(ac.assignmentPointsNow, ac.assignmentTotal), true);
+
+                Label arrowImage = new Label();
+                arrowImage.setUIID("AssignmentChangeArrow");
+                if(ac.assignmentPointsNow > ac.assignmentPointsBefore){
+                    arrowImage.getAllStyles().setFgColor(Grade.A.getColor());
+                }
+                if(ac.assignmentPointsNow < ac.assignmentPointsBefore){
+                    arrowImage.getAllStyles().setFgColor(Grade.E.getColor());
+                }
+                arrowImage.setMaterialIcon(FontImage.MATERIAL_ARROW_RIGHT);
+                assignmentGradeChange.add(oldGrade).add(arrowImage).add(newGrade);
+
+                assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Component.LEFT).widthPercentage(40),assignmentGradeChange);
+            }
+            Label timeStamp = new Label(createTimeStamp(ac.time));
+            timeStamp.setUIID("TimeStampText");
+            assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Component.RIGHT).widthPercentage(20),timeStamp);
+        }
+
+//        //the overall grade change on the right
+//        Container overallGradeChanges = BoxLayout.encloseY();
+//        overallGradeChanges.setUIID("OverallGradeChangesGrid");
+//
+//        Label newGrade = new Label(ii.gradeNow + "%");
+//        newGrade.setUIID("OverallGradeChange");
+//        newGrade.getAllStyles().setFgColor(Grade.getGradeColor(ii.gradeNow), true);
+//
+//
+//        Label oldGrade = new Label(ii.gradeBefore + "%");
+//        oldGrade.setUIID("OverallGradeChange");
+//        oldGrade.getAllStyles().setFgColor(Grade.getGradeColor(ii.gradeBefore), true);
+//
+//        Label arrowImage = new Label();
+//        arrowImage.setUIID("OverallGradeChangeArrow");
+//        try {
+//            if (Double.parseDouble(ii.gradeNow) > Double.parseDouble(ii.gradeBefore)) {
+//                arrowImage.getAllStyles().setFgColor(Grade.A.getColor());
+//            }
+//            if (Double.parseDouble(ii.gradeNow) < Double.parseDouble(ii.gradeBefore)) {
+//                arrowImage.getAllStyles().setFgColor(Grade.E.getColor());
+//            }
+//        } catch(Exception e){
+//            arrowImage.getAllStyles().setFgColor(Grade.NA.getColor());
+//        }
+//        arrowImage.setMaterialIcon(FontImage.MATERIAL_ARROW_DROP_DOWN);
+//
+//        overallGradeChanges.add(oldGrade).add(arrowImage).add(newGrade);
+
+
+//        Button delete = new Button(FontImage.MATERIAL_CLEAR);
+//        delete.addActionListener(e -> {
+//            inboxItemContainer.remove();
+//            if(Connectivity.isConnected()) {
+//                ScraperServer.deleteInboxItem(, this.getApp().getCurrentUser());
+//                this.getApp().getGradesFC().updateInboxButtonBadge();
+//            }
+//
+//            this.form.show();
+//        });
+
+        //adding all of the components to the inbox item container
+        inboxItemContainer.add(selectableText);
+        inboxItemContainer.add(assignmentTable);
+        //inboxItemContainer.add(((TableLayout)inboxItemContainer.getLayout()).createConstraint().horizontalAlign(Component.RIGHT).widthPercentage(13),overallGradeChanges);
+        //inboxItemContainer.add(delete);
+
+        return inboxItemContainer;
+    }
+
+    public static String createTimeStamp(Double pstEpochTime){
+        Date dif = new Date(Math.abs(new Date().getTime() - pstEpochTime.longValue()*1000) + 8*60*60*1000);
 
         //minus one because "DD" is days in the year starting with 1
         int days = Integer.parseInt(new SimpleDateFormat("DD").format(dif)) - 1;
@@ -113,109 +223,6 @@ public class InboxFC extends FormController {
         } else{
             timeStampText = minutes + " mins ago";
         }
-        Label timeStamp = new Label(timeStampText);
-        timeStamp.setUIID("TimeStampText");
-
-        //table of changed assignments: the assignment name and the way in which it changed
-        Container assignmentTable = new Container(new TableLayout(ii.assignmentChanges.size(),2));
-        assignmentTable.setUIID("AssignmentChangeTable");
-
-        for(AssignmentChange ac : ii.assignmentChanges){
-
-            if(ac.type.equals("created") && ac.points != null){
-                SpanLabel assignmentNameLabel = new SpanLabel("+ " + ac.name + ":");
-                assignmentNameLabel.setTextUIID("CreatedAssignmentChange");
-                assignmentNameLabel.getTextComponent().getAllStyles().setFgColor(Grade.A.getColor());
-                Label newAssignmentGradeLabel = new Label((ac.points != null ? ac.points : "NA") + "/" + ac.total);
-                newAssignmentGradeLabel.setUIID("NewAssignmentGrade");
-                newAssignmentGradeLabel.getAllStyles().setFgColor(Grade.getGradeColorFromFraction(ac.points, ac.total), true);
-                assignmentTable.add(((TableLayout)inboxItemContainer.getLayout()).createConstraint().horizontalAlign(Component.LEFT).widthPercentage(80),assignmentNameLabel).add(newAssignmentGradeLabel);
-            }
-            else if(ac.type.equals("modified")){
-                SpanLabel assignmentNameLabel = new SpanLabel(ac.name + ":");
-                assignmentNameLabel.setTextUIID("ModifiedAssignmentChange");
-
-                Container assignmentGradeChange = new Container(new TableLayout(1,3));
-                assignmentGradeChange.setUIID("AssignmentGradeChangeContainer");
-
-                Label oldGrade = new Label(Math.round(ac.pointsBefore / ac.total * 100) + "%");
-                oldGrade.setUIID("AssignmentGradeChange");
-                log(ac.pointsBefore + "");
-                log(ac.pointsNow + "");
-                oldGrade.getAllStyles().setFgColor(Grade.getGradeColorFromFraction(ac.pointsBefore, ac.total), true);
-
-                // Label newGrade = new Label(ac.pointsNow + "/" + ac.total);
-                Label newGrade = new Label(Math.round(ac.pointsNow / ac.total * 100) + "%");
-                newGrade.setUIID("AssignmentGradeChange");
-                newGrade.getAllStyles().setFgColor(Grade.getGradeColorFromFraction(ac.pointsNow, ac.total), true);
-
-                Label arrowImage = new Label();
-                arrowImage.setUIID("AssignmentGradeChangeArrow");
-                if(ac.pointsNow > ac.pointsBefore){
-                    arrowImage.getAllStyles().setFgColor(Grade.A.getColor());
-                }
-                if(ac.pointsNow < ac.pointsBefore){
-                    arrowImage.getAllStyles().setFgColor(Grade.E.getColor());
-                }
-                arrowImage.setMaterialIcon(FontImage.MATERIAL_ARROW_RIGHT);
-                assignmentGradeChange.add(oldGrade).add(arrowImage).add(newGrade);
-
-                assignmentTable.add(assignmentNameLabel).add(assignmentGradeChange);
-            }
-        }
-
-        //the overall grade change on the right
-        Container overallGradeChanges = BoxLayout.encloseY();
-        overallGradeChanges.setUIID("OverallGradeChangesGrid");
-
-        Label newGrade = new Label(ii.gradeNow + "%");
-        newGrade.setUIID("OverallGradeChange");
-        newGrade.getAllStyles().setFgColor(Grade.getGradeColor(ii.gradeNow), true);
-
-
-        Label oldGrade = new Label(ii.gradeBefore + "%");
-        oldGrade.setUIID("OverallGradeChange");
-        oldGrade.getAllStyles().setFgColor(Grade.getGradeColor(ii.gradeBefore), true);
-
-        Label arrowImage = new Label();
-        arrowImage.setUIID("OverallGradeChangeArrow");
-        try {
-            if (Double.parseDouble(ii.gradeNow) > Double.parseDouble(ii.gradeBefore)) {
-                arrowImage.getAllStyles().setFgColor(Grade.A.getColor());
-            }
-            if (Double.parseDouble(ii.gradeNow) < Double.parseDouble(ii.gradeBefore)) {
-                arrowImage.getAllStyles().setFgColor(Grade.E.getColor());
-            }
-        } catch(Exception e){
-            arrowImage.getAllStyles().setFgColor(Grade.NA.getColor());
-        }
-        arrowImage.setMaterialIcon(FontImage.MATERIAL_ARROW_DROP_DOWN);
-
-        overallGradeChanges.add(oldGrade).add(arrowImage).add(newGrade);
-
-        Container nameAssignmentListTable = new Container(BoxLayout.y());
-        nameAssignmentListTable.setUIID("NameAssignmentListTable");
-
-        nameAssignmentListTable.add(new Container(new TableLayout(1,2)).add(selectableText).add(timeStamp)).add(assignmentTable);
-
-
-
-        Button delete = new Button(FontImage.MATERIAL_CLEAR);
-        delete.addActionListener(e -> {
-            inboxItemContainer.remove();
-            if(Connectivity.isConnected()) {
-                ScraperServer.deleteInboxItem(ii, this.getApp().getCurrentUser());
-                this.getApp().getGradesFC().updateInboxButtonBadge();
-            }
-
-            this.form.show();
-        });
-
-        //adding all of the components to the inbox item container
-        inboxItemContainer.add(((TableLayout)inboxItemContainer.getLayout()).createConstraint().horizontalAlign(Component.LEFT).widthPercentage(87),nameAssignmentListTable);
-        inboxItemContainer.add(((TableLayout)inboxItemContainer.getLayout()).createConstraint().horizontalAlign(Component.RIGHT).widthPercentage(13),overallGradeChanges);
-        //inboxItemContainer.add(delete);
-
-        return inboxItemContainer;
+        return timeStampText;
     }
 }
