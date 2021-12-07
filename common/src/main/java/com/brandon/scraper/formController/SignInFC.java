@@ -88,15 +88,17 @@ public class SignInFC extends FormController{
         ToastBar.Status loadingBar = ToastBar.getInstance().createStatus();
         loadingBar.setMessage("Loading User");
         loadingBar.setProgress(0);
+        //loadingBar.setExpires(100000);
         loadingBar.show();
-        loadingBar.setUiid("LoadingBar");
         try {
             app.setCurrentUser(ScraperServer.createNewUser(user, pass, loadingStudent -> {
                 log("ran the progress update");
                 int period = 0;
                 while(!NetworkManager.getInstance().isQueueIdle()){
                     loadingBar.setProgress(Math.min(loadingBar.getProgress() + 20, 100));
+                    log("preform task");
                     loadingBar.setMessage("Loading " + loadingStudent.courses.get(Math.min(period,loadingStudent.courses.size()-1)).courseName);
+                    loadingBar.show();
                     try {
                         Thread.sleep(700);
 
