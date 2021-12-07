@@ -96,7 +96,6 @@ public class SignInFC extends FormController{
                 int period = 0;
                 while(!NetworkManager.getInstance().isQueueIdle()){
                     loadingBar.setProgress(Math.min(loadingBar.getProgress() + 20, 100));
-                    log("preform task");
                     loadingBar.setMessage("Loading " + loadingStudent.courses.get(Math.min(period,loadingStudent.courses.size()-1)).courseName);
                     loadingBar.show();
                     try {
