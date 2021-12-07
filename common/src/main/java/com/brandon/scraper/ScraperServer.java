@@ -202,20 +202,20 @@ public class ScraperServer {
     }
 
 
-//    public static void deleteInboxItem(InboxItem item, Student student){
-//        String link = DELETE_INBOX_ITEM;
-//        ConnectionRequest r = new ConnectionRequest(){
-//            @Override
-//            protected void handleErrorResponseCode(int code, String message) {}
-//        };
-//        r.setPost(true);
-//        r.setUrl(link);
-//        r.addArgument("username", student.getUsername());
-//        r.addArgument("id", item.index);
-//        r.addArgument("secret", SECRETKEY);
-//        log(NetworkManager.getInstance().isQueueIdle() ? "queue idle": "queue is not idle");
-//        NetworkManager.getInstance().addToQueue(r);
-//    }
+    public static void deleteAssignmentChange(AssignmentChange ac, Student student){
+        String link = DELETE_INBOX_ITEM;
+        ConnectionRequest r = new ConnectionRequest(){
+            @Override
+            protected void handleErrorResponseCode(int code, String message) {}
+        };
+        r.setPost(true);
+        r.setUrl(link);
+        r.addArgument("username", student.getUsername());
+        r.addArgument("period", ac.course.period);
+        r.addArgument("id", ac.id);
+        r.addArgument("secret", SECRETKEY);
+        NetworkManager.getInstance().addToQueue(r);
+    }
 
     public static void deactivateUser(Student student){
         String link = DEACTIVATE_USER;

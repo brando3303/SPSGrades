@@ -9,6 +9,7 @@ import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.table.Table;
 import com.codename1.ui.table.TableLayout;
 import com.codename1.ui.util.SwipeBackSupport;
+import org.littlemonkey.connectivity.Connectivity;
 
 import java.util.Date;
 
@@ -48,12 +49,8 @@ public class InboxFC extends FormController {
                     message.setUIID("EmptyInboxMessage");
                     inboxForm.add(message);
                     inboxForm.show();
-                    for (AssignmentChange ac : currentUser.getAllAssignmentChanges(false)) {
-                        if (!ac.deleted) {
-                            //TODO: fix delete inbox item
-                            //ScraperServer.deleteInboxItem(ii, currentUser);
-                            ac.deleted = true;
-                        }
+                    for (Course c : currentUser.courses){
+                        c.deleteInbox();
                     }
 
                     app.getGradesFC().updateInboxButtonBadge();
@@ -66,16 +63,9 @@ public class InboxFC extends FormController {
             inboxForm.add(message);
             return this.form;
         }
-
-        //for each inbox item
-//        for (InboxItem ii : currentUser.inbox.getInboxItems()) {
-//            if (!ii.shouldShow()) {
-//                continue;
-//            }
-//            inboxForm.add(createInboxItemComponent(ii));
-//        }
+        //create each course's inbox container
         for(Course c : currentUser.courses){
-            if(c.assignmentChanges.size() != 0){
+            if(c.getInboxSize() != 0){
                 this.form.add(createCourseInboxItemComponent(c));
             }
         }
@@ -88,18 +78,51 @@ public class InboxFC extends FormController {
         Container inboxItemContainer = BoxLayout.encloseY();
         inboxItemContainer.setUIID("GradeGrid");
 
+        //the title container
+        Container courseInboxTitle = TableLayout.encloseIn(3);
+
+
         //selectable name: the name of the class which has been changed
-        Container selectableText = new Container();
+        Container selectableTitle = new Container();
         Button selectInboxItem = new Button();
         selectInboxItem.addActionListener(e -> {
             log("you clicked on an inbox item!!!");
             this.getApp().getGradesFC().selectClass(course);
 
         });
-        selectableText.setLeadComponent(selectInboxItem);
+        selectableTitle.setLeadComponent(selectInboxItem);
         Label courseName = new Label(course.courseName);
-        selectableText.add(courseName);
+        selectableTitle.add(courseName);
         courseName.setUIID("CourseName");
+
+        //the overall grade change
+
+
+        Label overallGradeChange = createOverallGradeChangeLabel(course);
+
+        //the delete inbox items button
+        Button delete = new Button(FontImage.MATERIAL_CLEAR);
+        delete.addActionListener(e -> {
+            inboxItemContainer.remove();
+            if(Connectivity.isConnected()) {
+                course.deleteInbox();
+                this.getApp().getGradesFC().updateInboxButtonBadge();
+                this.form.setTransitionOutAnimator(null);
+                createInboxForm().show();
+            }
+
+            this.form.show();
+        });
+        courseInboxTitle.add(((TableLayout)courseInboxTitle.getLayout())
+                        .createConstraint()
+                        .widthPercentage(50),
+                        selectableTitle)
+                .add(((TableLayout)courseInboxTitle.getLayout())
+                .createConstraint()
+                .widthPercentage(35),overallGradeChange)
+                .add(((TableLayout)courseInboxTitle.getLayout())
+                        .createConstraint()
+                        .widthPercentage(15),delete);
 
         //table of changed assignments: the assignment name and the way in which it changed
         Container assignmentTable = new Container(new TableLayout(course.assignmentChanges.size(),3));
@@ -114,14 +137,12 @@ public class InboxFC extends FormController {
             assignmentNameLabel.setTextUIID("AssignmentChangeLabel");
             assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(46),assignmentNameLabel);
 
-
-
             if(ac.assignmentChangeType.equals("created") && ac.assignmentPoints != null){
 
                 Label newAssignmentGradeLabel = new Label(Utils.intify(ac.assignmentPoints) + "/" + Utils.intify(ac.assignmentTotal));
                 newAssignmentGradeLabel.setUIID("AssignmentChangeLabel");
                 newAssignmentGradeLabel.getAllStyles().setFgColor(Grade.getGradeColorFromFraction(ac.assignmentPoints, ac.assignmentTotal), true);
-                assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(36), newAssignmentGradeLabel);
+                assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(32), newAssignmentGradeLabel);
             }
             else if(ac.assignmentChangeType.equals("modified")){
 
@@ -137,7 +158,7 @@ public class InboxFC extends FormController {
                 newGrade.setUIID("AssignmentChangeLabel");
                 newGrade.getAllStyles().setFgColor(Grade.getGradeColorFromFraction(ac.assignmentPointsNow, ac.assignmentTotal), true);
 
-                Label arrowImage = new Label();
+                Label arrowImage = new Label("▶");
                 arrowImage.setUIID("AssignmentChangeArrow");
                 if(ac.assignmentPointsNow > ac.assignmentPointsBefore){
                     arrowImage.getAllStyles().setFgColor(Grade.A.getColor());
@@ -145,29 +166,20 @@ public class InboxFC extends FormController {
                 if(ac.assignmentPointsNow < ac.assignmentPointsBefore){
                     arrowImage.getAllStyles().setFgColor(Grade.E.getColor());
                 }
-                arrowImage.setMaterialIcon(FontImage.MATERIAL_ARROW_RIGHT);
                 assignmentGradeChange.add(oldGrade).add(arrowImage).add(newGrade);
 
-                assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(36),assignmentGradeChange);
+                assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(32),assignmentGradeChange);
             }
             Label timeStamp = new Label(createTimeStamp(ac.time));
             timeStamp.setUIID("TimeStampText");
-            assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(18),timeStamp);
+            assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(22),timeStamp);
         }
 
-//        Button delete = new Button(FontImage.MATERIAL_CLEAR);
-//        delete.addActionListener(e -> {
-//            inboxItemContainer.remove();
-//            if(Connectivity.isConnected()) {
-//                ScraperServer.deleteInboxItem(, this.getApp().getCurrentUser());
-//                this.getApp().getGradesFC().updateInboxButtonBadge();
-//            }
-//
-//            this.form.show();
-//        });
+
+
 
         //adding all of the components to the inbox item container
-        inboxItemContainer.add(selectableText);
+        inboxItemContainer.add(courseInboxTitle);
         inboxItemContainer.add(assignmentTable);
         //inboxItemContainer.add(((TableLayout)inboxItemContainer.getLayout()).createConstraint().horizontalAlign(Component.RIGHT).widthPercentage(13),overallGradeChanges);
         //inboxItemContainer.add(delete);
@@ -196,4 +208,23 @@ public class InboxFC extends FormController {
         }
         return timeStampText;
     }
+
+    public static Label createOverallGradeChangeLabel(Course course) {
+        Label returnLabel = new Label();
+        returnLabel.setUIID("OverallGradeChange");
+
+        if (Double.parseDouble(course.gradePercent) == course.getLowestOverallGradeInbox()) {
+            returnLabel.setText(course.gradePercent + "%");
+        }
+        if (Double.parseDouble(course.gradePercent) > course.getLowestOverallGradeInbox()){
+            returnLabel.setText(course.gradePercent + "%(▲" + Utils.intify(Math.abs(Double.parseDouble(course.gradePercent) - course.getLowestOverallGradeInbox())) + "%)");
+            returnLabel.getAllStyles().setFgColor(Grade.A.getColor(), true);
+        }
+        else if (Double.parseDouble(course.gradePercent) < course.getLowestOverallGradeInbox()){
+            returnLabel.setText(course.gradePercent + "%(▼" + Utils.intify(Math.abs(Double.parseDouble(course.gradePercent) - course.getLowestOverallGradeInbox())) + "%)");
+            returnLabel.getAllStyles().setFgColor(Grade.Dp.getColor(), true);
+        }
+        return returnLabel;
+    }
+
 }

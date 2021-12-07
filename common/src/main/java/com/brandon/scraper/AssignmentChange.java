@@ -18,6 +18,12 @@ public class AssignmentChange {
     public Course course;
 
     public boolean shouldDisplay(){
-        return assignmentChangeType.equals("created") ? (assignmentPoints != null) : !deleted;
+        if(assignmentChangeType.equals("created") && assignmentPoints == null){
+            return false;
+        }
+        if(deleted){
+            return false;
+        }
+        return true;
     }
 }

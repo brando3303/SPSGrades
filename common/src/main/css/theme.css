@@ -164,6 +164,7 @@ InboxItemClassName{
 TimeStampText{
     font-size: 2mm;
     color: grey;
+    padding: 0 1mm 1mm 1mm;
 }
 AssignmentChangeTable{
     margin: 0;
@@ -190,7 +191,7 @@ AssignmentGradeChangeContainer{
 }
 AssignmentChangeArrow{
 
-    font-size: 3mm;
+    font-size: 2mm;
     margin: 0;
     padding: 0 1mm 1mm 1mm;
 }
@@ -198,9 +199,10 @@ OverallGradeChangesGrid{
 
 }
 OverallGradeChange{
-    font-size: 2.5mm;
+    font-size: 3mm;
     text-align: center;
     padding: 1mm 0 0 0;
+    font-family: "native:MainLight";
 }
 OverallGradeChangeArrow{
     font-size: 3mm;

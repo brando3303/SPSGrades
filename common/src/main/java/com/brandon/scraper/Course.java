@@ -76,4 +76,23 @@ public class Course {
         }
         return lowest;
     }
+
+    public void deleteInbox(){
+        for(AssignmentChange ac : assignmentChanges){
+            if(!ac.deleted){
+                ScraperServer.deleteAssignmentChange(ac,courseOwner);
+                ac.deleted = true;
+            }
+        }
+    }
+
+    public int getInboxSize(){
+        int size = 0;
+        for(AssignmentChange ac : assignmentChanges){
+            if(ac.shouldDisplay()){
+                size++;
+            }
+        }
+        return size;
+    }
 }
