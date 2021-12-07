@@ -39,7 +39,7 @@ public class Course {
         if (total == 0 || points == null) {
             return "NA";
         }
-        return Math.round((points/total)*10000)/100.0 + "%";
+        return Utils.intify(Math.round((points/total)*1000)/10.0) + "%";
     }
 
     //this is convoluted and frankly I dont care

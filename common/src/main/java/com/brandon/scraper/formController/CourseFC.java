@@ -9,6 +9,7 @@ import com.codename1.ui.Form;
 import com.codename1.ui.Label;
 import com.codename1.ui.animations.CommonTransitions;
 import com.codename1.ui.layouts.BoxLayout;
+import com.codename1.ui.table.Table;
 import com.codename1.ui.table.TableLayout;
 import com.codename1.ui.util.SwipeBackSupport;
 
@@ -60,7 +61,7 @@ public class CourseFC extends FormController {
             Container assignmentTab = new Container(new TableLayout(1, 2));
             assignmentTab.setUIID("GradeGrid");
 
-            assignmentTab.add(percent).add(name);
+            assignmentTab.add(((TableLayout)assignmentTab.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(20),percent).add(name);
 
             this.form.add(assignmentTab);
         }
