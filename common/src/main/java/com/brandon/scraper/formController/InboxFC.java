@@ -6,6 +6,7 @@ import com.codename1.l10n.SimpleDateFormat;
 import com.codename1.ui.*;
 import com.codename1.ui.animations.CommonTransitions;
 import com.codename1.ui.layouts.BoxLayout;
+import com.codename1.ui.table.Table;
 import com.codename1.ui.table.TableLayout;
 import com.codename1.ui.util.SwipeBackSupport;
 
@@ -111,7 +112,7 @@ public class InboxFC extends FormController {
 
             SpanLabel assignmentNameLabel = new SpanLabel(ac.assignmentName + ":");
             assignmentNameLabel.setTextUIID("AssignmentChangeLabel");
-            assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Component.LEFT).widthPercentage(40),assignmentNameLabel);
+            assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(46),assignmentNameLabel);
 
 
 
@@ -120,7 +121,7 @@ public class InboxFC extends FormController {
                 Label newAssignmentGradeLabel = new Label(Utils.intify(ac.assignmentPoints) + "/" + Utils.intify(ac.assignmentTotal));
                 newAssignmentGradeLabel.setUIID("AssignmentChangeLabel");
                 newAssignmentGradeLabel.getAllStyles().setFgColor(Grade.getGradeColorFromFraction(ac.assignmentPoints, ac.assignmentTotal), true);
-                assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Component.LEFT).widthPercentage(40), newAssignmentGradeLabel);
+                assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(36), newAssignmentGradeLabel);
             }
             else if(ac.assignmentChangeType.equals("modified")){
 
@@ -147,42 +148,12 @@ public class InboxFC extends FormController {
                 arrowImage.setMaterialIcon(FontImage.MATERIAL_ARROW_RIGHT);
                 assignmentGradeChange.add(oldGrade).add(arrowImage).add(newGrade);
 
-                assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Component.LEFT).widthPercentage(40),assignmentGradeChange);
+                assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(36),assignmentGradeChange);
             }
             Label timeStamp = new Label(createTimeStamp(ac.time));
             timeStamp.setUIID("TimeStampText");
-            assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Component.RIGHT).widthPercentage(20),timeStamp);
+            assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(18),timeStamp);
         }
-
-//        //the overall grade change on the right
-//        Container overallGradeChanges = BoxLayout.encloseY();
-//        overallGradeChanges.setUIID("OverallGradeChangesGrid");
-//
-//        Label newGrade = new Label(ii.gradeNow + "%");
-//        newGrade.setUIID("OverallGradeChange");
-//        newGrade.getAllStyles().setFgColor(Grade.getGradeColor(ii.gradeNow), true);
-//
-//
-//        Label oldGrade = new Label(ii.gradeBefore + "%");
-//        oldGrade.setUIID("OverallGradeChange");
-//        oldGrade.getAllStyles().setFgColor(Grade.getGradeColor(ii.gradeBefore), true);
-//
-//        Label arrowImage = new Label();
-//        arrowImage.setUIID("OverallGradeChangeArrow");
-//        try {
-//            if (Double.parseDouble(ii.gradeNow) > Double.parseDouble(ii.gradeBefore)) {
-//                arrowImage.getAllStyles().setFgColor(Grade.A.getColor());
-//            }
-//            if (Double.parseDouble(ii.gradeNow) < Double.parseDouble(ii.gradeBefore)) {
-//                arrowImage.getAllStyles().setFgColor(Grade.E.getColor());
-//            }
-//        } catch(Exception e){
-//            arrowImage.getAllStyles().setFgColor(Grade.NA.getColor());
-//        }
-//        arrowImage.setMaterialIcon(FontImage.MATERIAL_ARROW_DROP_DOWN);
-//
-//        overallGradeChanges.add(oldGrade).add(arrowImage).add(newGrade);
-
 
 //        Button delete = new Button(FontImage.MATERIAL_CLEAR);
 //        delete.addActionListener(e -> {

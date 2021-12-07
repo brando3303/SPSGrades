@@ -179,7 +179,7 @@ public class ScraperServer {
             AssignmentChange assignmentChange = new AssignmentChange();
 
             assignmentChange.assignmentChangeType = (String)inboxItemMap.get("assignmentChangeType");
-            assignmentChange.assignmentName = (String)inboxItemMap.get("courseName");
+            assignmentChange.assignmentName = (String)inboxItemMap.get("assignmentName");
             assignmentChange.assignmentTotal = (Double)inboxItemMap.get("assignmentTotal");
             assignmentChange.courseName = (String) inboxItemMap.get("courseName");
             assignmentChange.deleted = inboxItemMap.get("deleted") == "true";
