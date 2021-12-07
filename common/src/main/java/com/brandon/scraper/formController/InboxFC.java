@@ -102,9 +102,9 @@ public class InboxFC extends FormController {
         Label overallGradeChange = createOverallGradeChangeLabel(course);
 
         //the delete inbox items button
-        Button delete = new Button(FontImage.MATERIAL_CLEAR);
+        Button delete = new Button("✕");
         delete.getAllStyles().setFgColor(ColorUtil.GRAY,true);
-        delete.setIconUIID("DeleteButton");
+
         delete.addActionListener(e -> {
             inboxItemContainer.remove();
             if(Connectivity.isConnected()) {
