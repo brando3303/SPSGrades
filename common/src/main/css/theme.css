@@ -181,6 +181,12 @@ AssignmentChangeLabel{
      padding: 0 1mm 1mm 1mm;
     font-family: "native:MainLight";
  }
+AssignmentChangePointsLabel{
+    font-size: 2.4mm;
+    margin: 0;
+    padding: 0 1mm 1mm 1mm;
+    font-family: "native:MainLight";
+}
 NewAssignmentGrade{
     font-size: 2.5mm;
 }
@@ -244,4 +250,8 @@ EmptyInboxMessage {
 
 LoadingBar{
 
+}
+
+DeleteButton{
+    color: grey;
 }

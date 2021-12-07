@@ -1,6 +1,7 @@
 package com.brandon.scraper.formController;
 
 import com.brandon.scraper.*;
+import com.codename1.charts.util.ColorUtil;
 import com.codename1.components.SpanLabel;
 import com.codename1.l10n.SimpleDateFormat;
 import com.codename1.ui.*;
@@ -102,6 +103,8 @@ public class InboxFC extends FormController {
 
         //the delete inbox items button
         Button delete = new Button(FontImage.MATERIAL_CLEAR);
+        delete.getAllStyles().setFgColor(ColorUtil.GRAY,true);
+        delete.setIconUIID("DeleteButton");
         delete.addActionListener(e -> {
             inboxItemContainer.remove();
             if(Connectivity.isConnected()) {
@@ -113,6 +116,7 @@ public class InboxFC extends FormController {
 
             this.form.show();
         });
+
         courseInboxTitle.add(((TableLayout)courseInboxTitle.getLayout())
                         .createConstraint()
                         .widthPercentage(50),
@@ -135,14 +139,14 @@ public class InboxFC extends FormController {
 
             SpanLabel assignmentNameLabel = new SpanLabel(ac.assignmentName + ":");
             assignmentNameLabel.setTextUIID("AssignmentChangeLabel");
-            assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(46),assignmentNameLabel);
+            assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(40),assignmentNameLabel);
 
             if(ac.assignmentChangeType.equals("created") && ac.assignmentPoints != null){
 
                 Label newAssignmentGradeLabel = new Label(Utils.intify(ac.assignmentPoints) + "/" + Utils.intify(ac.assignmentTotal));
-                newAssignmentGradeLabel.setUIID("AssignmentChangeLabel");
+                newAssignmentGradeLabel.setUIID("AssignmentChangePointsLabel");
                 newAssignmentGradeLabel.getAllStyles().setFgColor(Grade.getGradeColorFromFraction(ac.assignmentPoints, ac.assignmentTotal), true);
-                assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(32), newAssignmentGradeLabel);
+                assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(38), newAssignmentGradeLabel);
             }
             else if(ac.assignmentChangeType.equals("modified")){
 
@@ -150,12 +154,12 @@ public class InboxFC extends FormController {
                 assignmentGradeChange.setUIID("AssignmentGradeChangeContainer");
 
                 Label oldGrade = new Label(Utils.intify(ac.assignmentPointsBefore) + "/" + Utils.intify(ac.assignmentTotal));
-                oldGrade.setUIID("AssignmentChangeLabel");
+                oldGrade.setUIID("AssignmentChangePointsLabel");
                 oldGrade.getAllStyles().setFgColor(Grade.getGradeColorFromFraction(ac.assignmentPointsBefore, ac.assignmentTotal), true);
 
                 // Label newGrade = new Label(ac.pointsNow + "/" + ac.total);
                 Label newGrade = new Label(Utils.intify(ac.assignmentPointsNow) + "/" + Utils.intify(ac.assignmentTotal));
-                newGrade.setUIID("AssignmentChangeLabel");
+                newGrade.setUIID("AssignmentChangePointsLabel");
                 newGrade.getAllStyles().setFgColor(Grade.getGradeColorFromFraction(ac.assignmentPointsNow, ac.assignmentTotal), true);
 
                 Label arrowImage = new Label("▶");
@@ -168,7 +172,7 @@ public class InboxFC extends FormController {
                 }
                 assignmentGradeChange.add(oldGrade).add(arrowImage).add(newGrade);
 
-                assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(32),assignmentGradeChange);
+                assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(38),assignmentGradeChange);
             }
             Label timeStamp = new Label(createTimeStamp(ac.time));
             timeStamp.setUIID("TimeStampText");
