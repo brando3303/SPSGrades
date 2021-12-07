@@ -55,10 +55,11 @@ public class Student {
                     a.add(ac);
                 }
             }
+            return a;
         }
         for (Course c : courses) {
             for (AssignmentChange ac : c.assignmentChanges) {
-                if(!ac.deleted ) {
+                if(!ac.deleted && ac.shouldDisplay()) {
                     a.add(ac);
                 }
             }

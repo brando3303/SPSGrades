@@ -106,7 +106,7 @@ public class InboxFC extends FormController {
         assignmentTable.setUIID("AssignmentChangeTable");
 
         for(AssignmentChange ac : course.assignmentChanges){
-            if(!ac.showDisplay()){
+            if(!ac.shouldDisplay()){
                 continue;
             }
 
