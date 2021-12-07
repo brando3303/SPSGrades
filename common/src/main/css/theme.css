@@ -112,7 +112,7 @@ Percent{
 }
 
 CourseName{
-    font-size: 3mm;
+    font-size: 3.3mm;
     text-align: left;
     color: #2d3436;
 }
@@ -163,8 +163,9 @@ InboxItemClassName{
 }
 TimeStampText{
     font-size: 2mm;
-    color: grey;
+    color: #636e72;
     padding: 0 1mm 1mm 1mm;
+    font-family: "native:MainLight";
 }
 AssignmentChangeTable{
     margin: 0;
@@ -176,13 +177,13 @@ CreatedAssignmentChange{
     padding: 0;
 }
 AssignmentChangeLabel{
-     font-size: 2mm;
+     font-size: 2.15mm;
      margin: 0;
      padding: 0 1mm 1mm 1mm;
     font-family: "native:MainLight";
  }
 AssignmentChangePointsLabel{
-    font-size: 2.4mm;
+    font-size: 2.5mm;
     margin: 0;
     padding: 0 1mm 1mm 1mm;
     font-family: "native:MainLight";
@@ -205,10 +206,10 @@ OverallGradeChangesGrid{
 
 }
 OverallGradeChange{
-    font-size: 3mm;
+    font-size: 3.3mm;
     text-align: center;
-    padding: 1mm 0 0 0;
-    font-family: "native:MainLight";
+    padding: 1mm 0 1mm 0;
+    font-family: "native:MainBold";
 }
 OverallGradeChangeArrow{
     font-size: 3mm;
@@ -253,5 +254,11 @@ LoadingBar{
 }
 
 DeleteButton{
-    color: grey;
+    color: #b2bec3;
+}
+AssignmentName{
+    color: #2d3436;
+    padding: 0 1.5mm;
+    font-size: 3mm;
+    font-family: "native:MainRegular";
 }

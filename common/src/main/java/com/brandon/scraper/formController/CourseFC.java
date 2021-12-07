@@ -42,7 +42,8 @@ public class CourseFC extends FormController {
                 });
 
         for (Assignment a : course.assignments) {
-            SpanLabel name = new SpanLabel(a.name);
+            Label name = new Label(a.name);
+            name.setUIID("AssignmentName");
             Label points = new Label(a.points != null ? "" + a.points : "NA");
             Label total = new Label("" + a.total);
             Label percent = new Label(Course.getPercentString(a.total, a.points));
@@ -61,7 +62,7 @@ public class CourseFC extends FormController {
             Container assignmentTab = new Container(new TableLayout(1, 2));
             assignmentTab.setUIID("GradeGrid");
 
-            assignmentTab.add(((TableLayout)assignmentTab.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(20),percent).add(name);
+            assignmentTab.add(((TableLayout)assignmentTab.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(80),name).add(percent);
 
             this.form.add(assignmentTab);
         }
