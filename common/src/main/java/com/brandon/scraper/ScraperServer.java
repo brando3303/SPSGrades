@@ -211,7 +211,8 @@ public class ScraperServer {
         r.setPost(true);
         r.setUrl(link);
         r.addArgument("username", student.getUsername());
-        r.addArgument("period", ac.course.period);
+        //removes that pesky P
+        r.addArgument("period", ac.course.period.substring(1));
         r.addArgument("id", ac.id);
         r.addArgument("secret", SECRETKEY);
         NetworkManager.getInstance().addToQueue(r);
