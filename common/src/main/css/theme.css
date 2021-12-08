@@ -209,7 +209,7 @@ OverallGradeChange{
     font-size: 3.3mm;
     text-align: center;
     padding: 1mm 0 1mm 0;
-    font-family: "native:MainBold";
+    font-family: "native:MainRegular";
 }
 OverallGradeChangeArrow{
     font-size: 3mm;
