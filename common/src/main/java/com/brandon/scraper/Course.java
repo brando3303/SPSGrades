@@ -70,7 +70,7 @@ public class Course {
         Double lowest = 1010.;
         for(AssignmentChange ac : assignmentChanges){
             //TODO handle a null lowest value
-            if(Double.parseDouble(ac.overallGradeBefore) < lowest){
+            if(Double.parseDouble(ac.overallGradeBefore) < lowest && ac.shouldDisplay()){
                 lowest = Double.parseDouble(ac.overallGradeBefore);
             }
         }
