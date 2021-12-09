@@ -2,7 +2,6 @@ package com.brandon.scraper.formController;
 
 import com.brandon.scraper.*;
 import com.codename1.components.SpanLabel;
-import com.codename1.components.ToastBar;
 import com.codename1.io.NetworkManager;
 import com.codename1.io.Storage;
 import com.codename1.ui.*;
@@ -82,22 +81,19 @@ public class SignInFC extends FormController{
     //called when the username or password is submitted
     private void createUserSignIn(String user, String pass, Settings settings) {
         Main app = this.getApp();
-        Form loading = new Form();
-        //the loading form would have whatever graphic we wanted to show
-        //loading.show();
-        ToastBar.Status loadingBar = ToastBar.getInstance().createStatus();
-        loadingBar.setMessage("Loading User");
-        loadingBar.setProgress(0);
-        //loadingBar.setExpires(100000);
-        loadingBar.show();
+
+        LoadingFC lfc = app.getLoadingFC();
+        lfc.start();
+        lfc.setMessage("Loading New User");
+        lfc.show();
+
         try {
             app.setCurrentUser(ScraperServer.createNewUser(user, pass, loadingStudent -> {
                 log("ran the progress update");
                 int period = 0;
                 while(!NetworkManager.getInstance().isQueueIdle()){
-                    loadingBar.setProgress(Math.min(loadingBar.getProgress() + 20, 100));
-                    loadingBar.setMessage("Loading " + loadingStudent.courses.get(Math.min(period,loadingStudent.courses.size()-1)).courseName);
-                    loadingBar.show();
+                    lfc.setProgress(Math.min(lfc.getPercent() + 20, 100));
+                    lfc.setMessage("Loading " + loadingStudent.courses.get(Math.min(period,loadingStudent.courses.size()-1)).courseName);
                     try {
                         Thread.sleep(700);
 
@@ -106,14 +102,12 @@ public class SignInFC extends FormController{
                     }
                     period++;
                 }
-                loadingBar.clear();
             }));
         } catch (InvalidLoginInfo e) {
             log("error caught while trying to sign in with a new userefsffdfdssfdsfdsfsfdw");
             if (!signInWarningDisplayed) {
                 this.form.add(new Label("wrong username or password", "SignInWarning"));
                 signInWarningDisplayed = true;
-                loadingBar.clear();
             }
 
             this.form.show();

@@ -250,7 +250,29 @@ EmptyInboxMessage {
 }
 
 LoadingBar{
+    background-color: darkturquoise;
+    margin: 0;
+    padding: 0;
+}
 
+LoadingBarContainer{
+    background-color: #dfe6e9;
+    border: 1px solid black;
+    padding: 0;
+    margin: 0;
+}
+
+LoadingScreenForm{
+    background-color: white;
+    padding: 0;
+    margin: 0;
+}
+
+LoadingScreenText{
+    color: black;
+    font-family: "native:MainLight";
+    text-align: center;
+    font-size: 2.5mm;
 }
 
 DeleteButton{

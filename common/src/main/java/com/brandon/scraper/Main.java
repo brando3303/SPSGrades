@@ -24,6 +24,7 @@ public class Main extends Lifecycle implements PushCallback {
     private InboxFC inboxFC = new InboxFC(this);
     private SignInFC signInFC = new SignInFC(this);
     private SettingsFC settingsFC = new SettingsFC(this);
+    private LoadingFC loadingFC = new LoadingFC(this);
 
     private static Main mainInstance;
     private Student currentUser;
@@ -47,6 +48,10 @@ public class Main extends Lifecycle implements PushCallback {
 
     @Override
     public void runApp() {
+
+
+
+
         try {
             log(new SimpleDateFormat("yyyy-MM-dd").parse("2021-11-22").getTime() + "");
         } catch (ParseException e) {
@@ -182,6 +187,10 @@ public class Main extends Lifecycle implements PushCallback {
 
     public void setCurrentUser(Student s){
         currentUser = s;
+    }
+
+    public LoadingFC getLoadingFC() {
+        return loadingFC;
     }
 
     @Override
