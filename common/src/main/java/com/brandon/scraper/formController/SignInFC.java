@@ -119,7 +119,7 @@ public class SignInFC extends FormController{
         app.getGradesFC().start().show();
 
         if(app.getDeviceId() != null) {
-            ScraperServer.sendDeviceID(app.getCurrentUser().getUsername(), app.getDeviceId());
+            ScraperServer.sendDeviceID(app.getCurrentUser().getUsername(),app.getCurrentUser().getPassword(), app.getDeviceId());
         }
 
         Storage.getInstance().writeObject("userpass", new String[]{app.getCurrentUser().getUsername(), app.getCurrentUser().getPassword()});

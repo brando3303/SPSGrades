@@ -8,6 +8,8 @@ import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.table.TableLayout;
 import org.littlemonkey.connectivity.Connectivity;
 
+import static com.codename1.ui.CN.log;
+
 public class GradesFC extends FormController{
     private Button inboxButton;
 

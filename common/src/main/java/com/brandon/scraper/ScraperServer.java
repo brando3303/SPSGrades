@@ -255,14 +255,15 @@ public class ScraperServer {
 
     }
 
-    public static void sendDeviceID(String username, String deviceID){
+    public static void sendDeviceID(String username, String pwd, String deviceId){
         ConnectionRequest r = new ConnectionRequest(){
             @Override
             protected void handleErrorResponseCode(int code, String message) {}
         };
         r.setUrl(CREATE_USER);
         r.addArgument("username", username);
-        r.addArgument("deviceId", deviceID);
+        r.addArgument("pwd", pwd);
+        r.addArgument("deviceId", deviceId);
         r.addArgument("secret",SECRETKEY);
         NetworkManager.getInstance().addToQueue(r);
     }

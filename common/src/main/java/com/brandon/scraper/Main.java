@@ -212,7 +212,7 @@ public class Main extends Lifecycle implements PushCallback {
     public void registeredForPush(String s) {
 
         if(started && signedIn){
-            ScraperServer.sendDeviceID(currentUser.getUsername(), Push.getPushKey());
+            ScraperServer.sendDeviceID(currentUser.getUsername(), currentUser.getPassword(), Push.getPushKey());
         }
         deviceId = Push.getPushKey();
         log("this device was registered. Device ID: " + deviceId );
