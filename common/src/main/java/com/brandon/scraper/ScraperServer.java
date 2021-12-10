@@ -17,6 +17,17 @@ import static com.codename1.ui.CN.log;
 
 public class ScraperServer {
 
+    public static class SilentConnectionRequest extends ConnectionRequest{
+        @Override
+        protected void handleErrorResponseCode(int code, String message) {log("caught networking code error");}
+        @Override
+        protected void handleException(Exception err) {log("caught networking exception");}
+        @Override
+        protected void handleIOException(IOException err) {log("caught networking IOException");}
+        @Override
+        protected void handleRuntimeException(RuntimeException err) {log("caught networking exception");}
+    }
+
     public interface ProgressUpdateRunnable{
         public void WhileLoadingRunnable(Student incompleteUser);
     }
@@ -31,10 +42,7 @@ public class ScraperServer {
 
 
     public static Student getStudentFromDataBase(String username, String password) throws InvalidLoginInfo{
-        ConnectionRequest r = new ConnectionRequest(){
-            @Override
-            protected void handleErrorResponseCode(int code, String message) {}
-        };
+        SilentConnectionRequest r = new SilentConnectionRequest();
         r.setUrl(StringUtil.replaceAll(GET_USER,"USERNAME",username) + "&secret=" + SECRETKEY);
         r.setPost(false);
         NetworkManager.getInstance().addToQueueAndWait(r);
@@ -53,10 +61,7 @@ public class ScraperServer {
     }
 
     public static Student createNewUser(String username, String password, ProgressUpdateRunnable pur) throws InvalidLoginInfo{
-        ConnectionRequest r = new ConnectionRequest(){
-            @Override
-            protected void handleErrorResponseCode(int code, String message) {}
-        };
+        SilentConnectionRequest r = new SilentConnectionRequest();
         r.setUrl(CREATE_USER);
         r.addArgument("username", username);
         r.addArgument("pwd",password);
@@ -83,10 +88,7 @@ public class ScraperServer {
     }
 
     private static Student loadNewUser(ProgressUpdateRunnable pur, Student incompleteStudent){
-        ConnectionRequest r = new ConnectionRequest(){
-            @Override
-            protected void handleErrorResponseCode(int code, String message) {}
-        };
+        SilentConnectionRequest r = new SilentConnectionRequest();
         r.setUrl(LOAD_USER_ASSIGNMENTS);
         r.addArgument("username", incompleteStudent.getUsername());
         r.addArgument("secret",SECRETKEY);
@@ -204,10 +206,7 @@ public class ScraperServer {
 
     public static void deleteAssignmentChange(AssignmentChange ac, Student student){
         String link = DELETE_INBOX_ITEM;
-        ConnectionRequest r = new ConnectionRequest(){
-            @Override
-            protected void handleErrorResponseCode(int code, String message) {}
-        };
+        SilentConnectionRequest r = new SilentConnectionRequest();
         r.setPost(true);
         r.setUrl(link);
         r.addArgument("username", student.getUsername());
@@ -220,10 +219,7 @@ public class ScraperServer {
 
     public static void deactivateUser(Student student){
         String link = DEACTIVATE_USER;
-        ConnectionRequest r = new ConnectionRequest(){
-            @Override
-            protected void handleErrorResponseCode(int code, String message) {}
-        };
+        SilentConnectionRequest r = new SilentConnectionRequest();
         r.setPost(true);
         r.setUrl(link);
         r.addArgument("username", student.getUsername());
@@ -234,10 +230,7 @@ public class ScraperServer {
 
     public static Student updateUser(Student student){
         String link = UPDATE_USER;
-        ConnectionRequest r = new ConnectionRequest(){
-            @Override
-            protected void handleErrorResponseCode(int code, String message) {}
-        };
+        SilentConnectionRequest r = new SilentConnectionRequest();
         r.setPost(true);
         r.setUrl(link);
         r.addArgument("username", student.getUsername());
@@ -256,10 +249,7 @@ public class ScraperServer {
     }
 
     public static void sendDeviceID(String username, String pwd, String deviceId){
-        ConnectionRequest r = new ConnectionRequest(){
-            @Override
-            protected void handleErrorResponseCode(int code, String message) {}
-        };
+        SilentConnectionRequest r = new SilentConnectionRequest();
         r.setUrl(CREATE_USER);
         r.addArgument("username", username);
         r.addArgument("pwd", pwd);

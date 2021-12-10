@@ -31,6 +31,7 @@ public class Main extends Lifecycle implements PushCallback {
 
     private boolean started = false;
     private boolean signedIn = false;
+    private boolean redirectToInbox = false;
     private String deviceId;
 
 
@@ -137,8 +138,12 @@ public class Main extends Lifecycle implements PushCallback {
         currentUser.setSettings(settings);
         inboxFC.start();
         gradesFC.start();
-        gradesFC.show();
 
+        if(redirectToInbox){
+            inboxFC.show();
+        }else {
+            gradesFC.show();
+        }
     }
 
     public SettingsFC getSettingsFC() {
@@ -199,11 +204,12 @@ public class Main extends Lifecycle implements PushCallback {
 
         //TODO: find out if this actually works
         if (value.startsWith("@69")) {
-            for (Course sc : currentUser.courses) {
-                if (value.contains(sc.courseName)) {
-                    sc.getCourseFormC().start();
-                    sc.getCourseFormC().show();
-                }
+
+            if(started && signedIn) {
+                inboxFC.start().show();
+            }
+            else {
+                redirectToInbox = true;
             }
         }
     }
