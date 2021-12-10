@@ -6,6 +6,7 @@ import com.codename1.components.SpanLabel;
 import com.codename1.l10n.SimpleDateFormat;
 import com.codename1.ui.*;
 import com.codename1.ui.animations.CommonTransitions;
+import com.codename1.ui.events.ActionEvent;
 import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.table.Table;
 import com.codename1.ui.table.TableLayout;
@@ -45,16 +46,23 @@ public class InboxFC extends FormController {
 
         inboxForm.getToolbar().addMaterialCommandToRightBar("Clear", FontImage.MATERIAL_CLEAR_ALL, 4,
                 e -> {
-                    inboxForm.removeAll();
-                    Label message = new Label("Grade changes will appear here");
-                    message.setUIID("EmptyInboxMessage");
-                    inboxForm.add(message);
-                    inboxForm.show();
-                    for (Course c : currentUser.courses){
-                        c.deleteInbox();
-                    }
+                    Command ok = new Command("ok"){
+                        @Override
+                        public void actionPerformed(ActionEvent evt){
+                            inboxForm.removeAll();
+                            Label message = new Label("Grade changes will appear here");
+                            message.setUIID("EmptyInboxMessage");
+                            inboxForm.add(message);
+                            inboxForm.show();
+                            for (Course c : currentUser.courses){
+                                c.deleteInbox();
+                            }
+                            app.getGradesFC().updateInboxButtonBadge();
+                        }
+                    };
 
-                    app.getGradesFC().updateInboxButtonBadge();
+                    Dialog.show("Delete all Assignment Changes?","You can't undo this.", ok, new Command("Cancel"));
+
                 });
 
         //if there are no inbox items
