@@ -95,7 +95,7 @@ public class SignInFC extends FormController{
                     lfc.setProgress(Math.min(lfc.getPercent() + 20, 100));
                     lfc.setMessage("Loading " + loadingStudent.courses.get(Math.min(period,loadingStudent.courses.size()-1)).courseName);
                     try {
-                        Thread.sleep(700);
+                        Thread.sleep(1000);
 
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();

@@ -246,7 +246,9 @@ PullToRefresh {
 }
 EmptyInboxMessage {
     color: #2d3436;
-    margin: 3mm 5mm;
+    font-size: 3.2mm;
+    font-family: "native:MainLight";
+    text-align: center;
 }
 
 LoadingBar{
