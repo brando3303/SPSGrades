@@ -140,9 +140,9 @@ public class InboxFC extends FormController {
         Container assignmentTable = new Container(new TableLayout(course.assignmentChanges.size(),4));
         assignmentTable.setUIID("AssignmentChangeTable");
 
-        int assignmentNameWidth = 47;
-        int timeStampWidth = 20;
-
+        int createdPlusWidth = 6;
+        int assignmentNameWidth = 42;
+        int fractionGradeWidth = 38;
         for(AssignmentChange ac : course.assignmentChanges){
             if(!ac.shouldDisplay()){
                 continue;
@@ -157,21 +157,19 @@ public class InboxFC extends FormController {
             } else{
                 greenPlus.setText(" ");
             }
-            assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(8),greenPlus);
-
+            assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(createdPlusWidth),greenPlus);
 
 
             SpanLabel assignmentNameLabel = new SpanLabel(ac.assignmentName);
             assignmentNameLabel.setTextUIID("AssignmentChangeLabel");
-            assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(assignmentNameWidth-8),assignmentNameLabel);
+            assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(assignmentNameWidth-createdPlusWidth),assignmentNameLabel);
 
             if(ac.assignmentChangeType.equals("created") && ac.assignmentPoints != null){
 
                 Label newAssignmentGradeLabel = new Label(Utils.intify(ac.assignmentPoints) + "/" + Utils.intify(ac.assignmentTotal));
                 newAssignmentGradeLabel.setUIID("AssignmentChangePointsLabel");
                 newAssignmentGradeLabel.getAllStyles().setFgColor(Grade.getGradeColorFromFraction(ac.assignmentPoints, ac.assignmentTotal), true);
-                int w = 100-timeStampWidth-assignmentNameWidth;
-                assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(w), newAssignmentGradeLabel);
+                assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(fractionGradeWidth), newAssignmentGradeLabel);
             }
             else if(ac.assignmentChangeType.equals("modified")){
 
@@ -196,13 +194,11 @@ public class InboxFC extends FormController {
                     arrowImage.getAllStyles().setFgColor(Grade.E.getColor());
                 }
                 assignmentGradeChange.add(oldGrade).add(arrowImage).add(newGrade);
-
-                int w = 100-timeStampWidth-assignmentNameWidth;
-                assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(w),assignmentGradeChange);
+                assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(fractionGradeWidth),assignmentGradeChange);
             }
             Label timeStamp = new Label(createTimeStamp(ac.time));
             timeStamp.setUIID("TimeStampText");
-            assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(timeStampWidth),timeStamp);
+            assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(100-fractionGradeWidth-assignmentNameWidth),timeStamp);
         }
 
 
