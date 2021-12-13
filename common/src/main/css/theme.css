@@ -179,7 +179,7 @@ CreatedAssignmentChange{
 AssignmentChangeLabel{
      font-size: 2.15mm;
      margin: 0;
-     padding: 0 1mm 1mm 1mm;
+     padding: 0 0mm 1mm 0mm;
     font-family: "native:MainLight";
  }
 AssignmentChangePointsLabel{

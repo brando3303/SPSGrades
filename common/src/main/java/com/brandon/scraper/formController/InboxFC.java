@@ -137,7 +137,7 @@ public class InboxFC extends FormController {
                         .widthPercentage(15),delete);
 
         //table of changed assignments: the assignment name and the way in which it changed
-        Container assignmentTable = new Container(new TableLayout(course.assignmentChanges.size(),3));
+        Container assignmentTable = new Container(new TableLayout(course.assignmentChanges.size(),4));
         assignmentTable.setUIID("AssignmentChangeTable");
 
         int assignmentNameWidth = 47;
@@ -148,9 +148,22 @@ public class InboxFC extends FormController {
                 continue;
             }
 
+
+            Label greenPlus = new Label();
+            greenPlus.setUIID("AssignmentChangePointsLabel");
+            greenPlus.getAllStyles().setFgColor(Grade.A.getColor(), true);
+            if(ac.assignmentChangeType.equals("created")){
+                greenPlus.setText("+");
+            } else{
+                greenPlus.setText(" ");
+            }
+            assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(8),greenPlus);
+
+
+
             SpanLabel assignmentNameLabel = new SpanLabel(ac.assignmentName);
             assignmentNameLabel.setTextUIID("AssignmentChangeLabel");
-            assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(assignmentNameWidth),assignmentNameLabel);
+            assignmentTable.add(((TableLayout)assignmentTable.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(assignmentNameWidth-8),assignmentNameLabel);
 
             if(ac.assignmentChangeType.equals("created") && ac.assignmentPoints != null){
 

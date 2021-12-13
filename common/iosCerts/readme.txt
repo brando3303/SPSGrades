@@ -1,14 +1,14 @@
 iOS Push certificates have been created for your app with bundle ID com.brandon.scraper.  Please keep this file as you will need the details about the certificate locations and passwords to use Push successfully in your apps.
 
 Development Push Certificate URL: 
-https://codename-one-push-certificates.s3.amazonaws.com/com.brandon.scraper_ProductionPushcc292324-b6c5-4a90-84f5-4c7277b1f3c7.p12
+https://codename-one-push-certificates.s3.amazonaws.com/com.brandon.scraper_ProductionPush8b593a32-3f86-448e-bb62-99c206dc5312.p12
 
-Development Push Certificate Password: 'wuA1QojD'
+Development Push Certificate Password: 'imC3oUSW'
 
 Production Push Certificate URL: 
-https://codename-one-push-certificates.s3.amazonaws.com/com.brandon.scraper_DevelopmentPush899096ac-12f1-45b5-b8f2-13eaa272ec72.p12
+https://codename-one-push-certificates.s3.amazonaws.com/com.brandon.scraper_DevelopmentPushd27ceb1c-d85f-4f1a-a140-e6b9f4cf9149.p12
 
-Production Push Certificate Password: 'wuA1QojD'
+Production Push Certificate Password: 'imC3oUSW'
 
 In order to send a push from within an app in production do this to send the push to all devices:
 
