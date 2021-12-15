@@ -46,7 +46,7 @@ public class InboxFC extends FormController {
 
         inboxForm.getToolbar().addMaterialCommandToRightBar("Clear", FontImage.MATERIAL_CLEAR_ALL, 4,
                 e -> {
-                    Command ok = new Command("ok"){
+                    Command ok = new Command("Ok"){
                         @Override
                         public void actionPerformed(ActionEvent evt){
                             inboxForm.removeAll();
@@ -61,7 +61,7 @@ public class InboxFC extends FormController {
                         }
                     };
 
-                    Dialog.show("Delete all Assignment Changes?","You can't undo this.", ok, new Command("Cancel"));
+                    Dialog.show("Clear Inbox","You can't undo this", ok, new Command("Cancel"));
 
                 });
 
