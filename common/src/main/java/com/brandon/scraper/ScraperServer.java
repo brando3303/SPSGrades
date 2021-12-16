@@ -5,6 +5,7 @@ import com.codename1.io.JSONParser;
 import com.codename1.io.NetworkManager;
 import com.codename1.l10n.ParseException;
 import com.codename1.l10n.SimpleDateFormat;
+import com.codename1.push.Push;
 import com.codename1.ui.Dialog;
 import com.codename1.util.StringUtil;
 
@@ -43,6 +44,7 @@ public class ScraperServer {
 
     public static Student getStudentFromDataBase(String username, String password) throws InvalidLoginInfo{
         SilentConnectionRequest r = new SilentConnectionRequest();
+        r.setFailSilently(true);
         r.setUrl(StringUtil.replaceAll(GET_USER,"USERNAME",username) + "&secret=" + SECRETKEY);
         r.setPost(false);
         NetworkManager.getInstance().addToQueueAndWait(r);
@@ -110,6 +112,15 @@ public class ScraperServer {
 
     private static Student createStudentFromMap(Map<String,Object> studentJson, String username, String password){
         Student returnStudent = new Student(username, password);
+
+        if(studentJson.containsKey("deviceId")) {
+            Main.getInstance().setDeviceId((String)studentJson.get("deviceId"));
+        } else
+            if(Push.getPushKey() != null){
+            log("sent deviceId: " + Push.getPushKey());
+            ScraperServer.sendDeviceID(username,password,Push.getPushKey());
+        }
+
 
         //deserializing the course information (including assignments)
         LinkedHashMap<String, Object> courses = (LinkedHashMap<String, Object>) studentJson.get("lastCourses");

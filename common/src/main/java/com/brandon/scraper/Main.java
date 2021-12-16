@@ -2,6 +2,7 @@ package com.brandon.scraper;
 
 import com.brandon.scraper.formController.*;
 import com.codename1.components.InfiniteProgress;
+import com.codename1.io.ConnectionRequest;
 import com.codename1.io.Storage;
 import com.codename1.l10n.ParseException;
 import com.codename1.l10n.SimpleDateFormat;
@@ -14,10 +15,14 @@ import com.codename1.ui.Display;
 import com.codename1.ui.Form;
 import org.littlemonkey.connectivity.Connectivity;
 
+import java.util.Date;
+
 import static com.codename1.ui.CN.log;
 
 //needs to implement PushCallback
 public class Main extends Lifecycle implements PushCallback {
+
+    private final double minsBeforeReload = 1; //mins
 
     //the Form Controllers for this app
     private GradesFC gradesFC = new GradesFC(this);
@@ -33,16 +38,23 @@ public class Main extends Lifecycle implements PushCallback {
     private boolean signedIn = false;
     private boolean redirectToInbox = false;
     private String deviceId;
+    private double lastTimeInFocus;
+
 
 
     @Override
     public void start(){
+        ConnectionRequest.setHandleErrorCodesInGlobalErrorHandler(false);
+
         if(!started){
             runApp();
             return;
         } else if(started && !signedIn){
             signInFC.show();
-        } else if(started && signedIn){
+        } else if(started && signedIn && (new Date().getTime()-lastTimeInFocus) >= minsBeforeReload * 60 * 1000){
+            loadingFC.start();
+            loadingFC.setMessage("Loading User...");
+            loadingFC.show();
             signInExistingUser(currentUser.getUsername(),currentUser.getPassword(),currentUser.getSettings());
         }
     }
@@ -154,6 +166,10 @@ public class Main extends Lifecycle implements PushCallback {
         return deviceId;
     }
 
+    public void setDeviceId(String deviceId){
+        this.deviceId = deviceId;
+    }
+
     public SignInFC getSignInFC() {
         return signInFC;
     }
@@ -196,6 +212,11 @@ public class Main extends Lifecycle implements PushCallback {
 
     public LoadingFC getLoadingFC() {
         return loadingFC;
+    }
+
+    @Override
+    public void stop(){
+        lastTimeInFocus = new Date().getTime();
     }
 
     @Override
