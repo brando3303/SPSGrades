@@ -22,7 +22,7 @@ import static com.codename1.ui.CN.log;
 //needs to implement PushCallback
 public class Main extends Lifecycle implements PushCallback {
 
-    private final double minsBeforeReload = 1; //mins
+    private final double minsBeforeReload = 60; //mins
 
     //the Form Controllers for this app
     private GradesFC gradesFC = new GradesFC(this);
@@ -52,9 +52,6 @@ public class Main extends Lifecycle implements PushCallback {
         } else if(started && !signedIn){
             signInFC.show();
         } else if(started && signedIn && (new Date().getTime()-lastTimeInFocus) >= minsBeforeReload * 60 * 1000){
-            loadingFC.start();
-            loadingFC.setMessage("Loading User...");
-            loadingFC.show();
             signInExistingUser(currentUser.getUsername(),currentUser.getPassword(),currentUser.getSettings());
         }
     }
@@ -124,10 +121,12 @@ public class Main extends Lifecycle implements PushCallback {
 
     private void signInExistingUser(String username, String pwd, Settings settings) {
         double time = System.currentTimeMillis();
-        Dialog ip = new InfiniteProgress().showInfiniteBlocking();
+        loadingFC.start();
+        loadingFC.setMessage("Loading User...");
+        loadingFC.show();
         if (!Connectivity.isConnected()) {
             Dialog.show("You are disconnected from the internet.", "Reconnect to the internet and try again", "Ok", null);
-            ip.dispose();
+
             return;
         }
         loadUserSignIn(username, pwd, settings);
