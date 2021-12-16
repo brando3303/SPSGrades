@@ -248,6 +248,7 @@ EmptyInboxMessage {
     color: #2d3436;
     font-size: 3.2mm;
     font-family: "native:MainLight";
+    padding: 4mm 1mm 1mm 1mm;
     text-align: center;
 }
 
