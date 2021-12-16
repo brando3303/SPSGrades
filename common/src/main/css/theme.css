@@ -186,7 +186,7 @@ AssignmentChangePointsLabel{
     font-size: 2.5mm;
     margin: 0;
     padding: 0 1mm 1mm 1mm;
-    font-family: "native:MainLight";
+    font-family: "native:MainBold";
 }
 NewAssignmentGrade{
     font-size: 2.5mm;
@@ -250,6 +250,7 @@ EmptyInboxMessage {
     font-family: "native:MainLight";
     padding: 4mm 1mm 1mm 1mm;
     text-align: center;
+    padding-top: 3mm;
 }
 
 LoadingBar{
