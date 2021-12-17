@@ -59,15 +59,11 @@ public class Main extends Lifecycle implements PushCallback {
     @Override
     public void runApp() {
 
-
-
-
         try {
             log(new SimpleDateFormat("yyyy-MM-dd").parse("2021-11-22").getTime() + "");
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
 
         Form loading = new Form();
         loading.show();

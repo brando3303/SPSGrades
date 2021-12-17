@@ -7,7 +7,6 @@ import com.codename1.l10n.ParseException;
 import com.codename1.l10n.SimpleDateFormat;
 import com.codename1.push.Push;
 import com.codename1.ui.Dialog;
-import com.codename1.util.StringUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -45,8 +44,10 @@ public class ScraperServer {
     public static Student getStudentFromDataBase(String username, String password) throws InvalidLoginInfo{
         SilentConnectionRequest r = new SilentConnectionRequest();
         r.setFailSilently(true);
-        r.setUrl(StringUtil.replaceAll(GET_USER,"USERNAME",username) + "&secret=" + SECRETKEY);
-        r.setPost(false);
+        r.setUrl(GET_USER);
+        r.addArgument("username", username);
+        r.addArgument("secret", SECRETKEY);
+        r.setPost(true);
         NetworkManager.getInstance().addToQueueAndWait(r);
         try {
             Map<String, Object> studentJson = new JSONParser().parseJSON(new InputStreamReader(new ByteArrayInputStream(r.getResponseData()), "UTF-8"));
