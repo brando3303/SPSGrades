@@ -29,6 +29,7 @@ public class InboxFC extends FormController {
     }
 
     private Form createInboxForm() {
+        log("created inbox form");
         //setting up title bar
         Student currentUser = this.getApp().getCurrentUser();
         Main app = this.getApp();

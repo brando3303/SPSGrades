@@ -66,6 +66,29 @@ public class Course {
 
     }
 
+    public void sortAssignmentChanges(){
+        Double[] epochData = new Double[assignmentChanges.size()];
+
+        for(int i = 0; i < assignmentChanges.size(); i++){
+            epochData[i] = assignmentChanges.get(i).time;
+        }
+        Arrays.sort(epochData);
+        ArrayList<AssignmentChange> sortedAssignmentChanges = new ArrayList<>();
+        for(Double e : epochData){
+            for(Iterator<AssignmentChange> iterator = assignmentChanges.listIterator(); iterator.hasNext();){
+                AssignmentChange a = iterator.next();
+                if(e == a.time){
+                    sortedAssignmentChanges.add(a);
+                    assignmentChanges.remove(a);
+                    break;
+                }
+            }
+        }
+        Collections.reverse(sortedAssignmentChanges);
+        assignmentChanges = sortedAssignmentChanges;
+
+    }
+
     public Double getLowestOverallGradeInbox(){
         Double lowest = 1010.;
         for(AssignmentChange ac : assignmentChanges){

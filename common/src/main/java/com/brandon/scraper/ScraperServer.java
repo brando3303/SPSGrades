@@ -147,7 +147,7 @@ public class ScraperServer {
                 if (studentJson.containsKey("inbox") && ((LinkedHashMap<String,Object>)studentJson.get("inbox")).containsKey(period) && ((LinkedHashMap<String,Object>)studentJson.get("inbox")).keySet().size() != 0){
                     LinkedHashMap<String, Object> assignmentList = (LinkedHashMap<String, Object>) ((LinkedHashMap<String, Object>) studentJson.get("inbox")).get(period);
                     course.assignmentChanges = deserializeCourseInbox(assignmentList);
-                    log("got here");
+                    course.sortAssignmentChanges();
                     for(AssignmentChange ac : course.assignmentChanges){
                         ac.course = course;
                     }
@@ -210,7 +210,7 @@ public class ScraperServer {
                 assignmentChange.assignmentPointsNow = (Double)inboxItemMap.get("assignmentPointsNow");
             }
             assignmentChanges.add(assignmentChange);
-            log("found assignment change: " + assignmentChange.assignmentName);
+            log("found assignment change: " + assignmentChange.assignmentName + ": deleted = " + (assignmentChange.deleted ? "true": "false"));
 
         }
         return assignmentChanges;
