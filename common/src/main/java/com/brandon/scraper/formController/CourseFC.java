@@ -1,7 +1,10 @@
 package com.brandon.scraper.formController;
 
-import com.brandon.scraper.*;
-import com.codename1.charts.util.ColorUtil;
+import com.brandon.scraper.Assignment;
+import com.brandon.scraper.Course;
+import com.brandon.scraper.Main;
+import com.brandon.scraper.Utils;
+import com.codename1.components.Accordion;
 import com.codename1.components.SpanLabel;
 import com.codename1.ui.Container;
 import com.codename1.ui.FontImage;
@@ -29,7 +32,7 @@ public class CourseFC extends FormController {
     }
 
     private Form createCoursePage() {
-        this.form = new Form(course.courseName, BoxLayout.y());
+        this.form = new Form(course.courseName + " - " + course.gradePercent + "%", BoxLayout.y());
         Utils.setToolbarUIIDForSolidColor(this.form, "TitleArea");
 
         SwipeBackSupport.bindBack(this.form, args -> this.getApp().getGradesFC().getForm());
@@ -46,25 +49,24 @@ public class CourseFC extends FormController {
             name.setUIID("AssignmentName");
             Label points = new Label(a.points != null ? "" + a.points : "NA");
             Label total = new Label("" + a.total);
-            Label percent = new Label(Course.getPercentString(a.total, a.points));
+            Label percent = Utils.createFrationLabel(a.points,a.total,true,null);
 
-            if (a.points != null || a.total == 0) {
-                percent.getAllStyles().setFgColor(Grade.getGradeColor(a.points / a.total * 100));
-            } else {
-                percent.getAllStyles().setFgColor(ColorUtil.GRAY);
-            }
-
+            Accordion dropDown = new Accordion();
+            dropDown.setScrollableY(false);
+            dropDown.setBackgroundItemUIID("GradeGrid");
+            dropDown.setHeaderUIID("AssignmentDropDown");
 
             Container gradeBox = BoxLayout.encloseY(points, total);
             gradeBox.setUIID("GradePercentV");
 
 
             Container assignmentTab = new Container(new TableLayout(1, 2));
-            assignmentTab.setUIID("GradeGrid");
 
-            assignmentTab.add(((TableLayout)assignmentTab.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(80),name).add(percent);
+            assignmentTab.add(((TableLayout)assignmentTab.getLayout()).createConstraint().horizontalAlign(Table.LEFT).widthPercentage(75),name)
+                    .add(((TableLayout)assignmentTab.getLayout()).createConstraint().horizontalAlign(Table.RIGHT),percent);
 
-            this.form.add(assignmentTab);
+            dropDown.addContent(assignmentTab,new SpanLabel(a.name));
+            this.form.add(dropDown);
         }
         isCreated = true;
         return this.form;

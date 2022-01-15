@@ -286,5 +286,10 @@ AssignmentName{
     color: #2d3436;
     padding: 0 1.5mm;
     font-size: 3mm;
-    font-family: "native:MainRegular";
+    font-family: "native:MainLight";
+}
+
+AssignmentDropDown{
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
 }

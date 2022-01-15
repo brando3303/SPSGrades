@@ -1,6 +1,8 @@
 package com.brandon.scraper;
 
+import com.codename1.charts.util.ColorUtil;
 import com.codename1.ui.Form;
+import com.codename1.ui.Label;
 import com.codename1.ui.plaf.Border;
 
 
@@ -26,5 +28,21 @@ public class Utils {
             return Math.round(Double.parseDouble(num)) + "";
         }
         return num;
+    }
+
+    public static Label createFrationLabel(Double numerator, Double denom, boolean colored, String UIID){
+        Label returnLabel = new Label();
+        returnLabel.setUIID(UIID);
+
+        if(numerator == null){
+            returnLabel.setText("NA/" + intify(denom));
+            if(colored)
+            returnLabel.getAllStyles().setFgColor(ColorUtil.GRAY);
+            return returnLabel;
+        }
+        returnLabel.setText(intify(numerator) + "/" + intify(denom));
+        if(colored)
+        returnLabel.getAllStyles().setFgColor(Grade.getGradeColor(numerator / denom * 100));
+        return returnLabel;
     }
 }
