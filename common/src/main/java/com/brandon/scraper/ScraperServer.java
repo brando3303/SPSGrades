@@ -127,35 +127,35 @@ public class ScraperServer {
         LinkedHashMap<String, Object> courses = (LinkedHashMap<String, Object>) studentJson.get("lastCourses");
         for(String period : courses.keySet()){
             //makes sure that the current object is a class with a grade
-            if(courses.get(period) instanceof LinkedHashMap && ((LinkedHashMap<String,Object>)courses.get(period)).containsKey("gradePercent")) {
-                Course course = new Course(returnStudent);
+            Course course = new Course(returnStudent);
 
-                LinkedHashMap<String, Object> courseMap = (LinkedHashMap<String, Object>) courses.get(period);
-                course.courseName = (String) courseMap.get("courseName");
-                course.frn = (String) courseMap.get("frn");
-                course.gradeLetter = (String) courseMap.get("gradeLetter");
-                course.gradePercent = (String) courseMap.get("gradePercent");
-                course.period = (String) courseMap.get("period");
-                course.teacher = (String) courseMap.get("teacher");
+            LinkedHashMap<String, Object> courseMap = (LinkedHashMap<String, Object>) courses.get(period);
+            course.courseName = (String) courseMap.get("courseName");
+            course.frn = (String) courseMap.get("frn");
+            course.gradeLetter = (String) courseMap.get("gradeLetter");
+            if (course.gradeLetter == null)
+                course.gradeLetter = "NA";
+            course.gradePercent = (String) courseMap.get("gradePercent");
+            if (course.gradePercent == null)
+                course.gradePercent = "NA";
+            course.period = (String) courseMap.get("period");
+            course.teacher = (String) courseMap.get("teacher");
 
-                //getting Assignments for this class
-                if (studentJson.containsKey("lastAssignments") && ((LinkedHashMap<String,Object>)studentJson.get("lastAssignments")).keySet().size() != 0) {
-                    ArrayList<LinkedHashMap<String, Object>> assignmentList = (ArrayList<LinkedHashMap<String, Object>>) ((LinkedHashMap<String, Object>) studentJson.get("lastAssignments")).get(period);
-                    course.assignments = deserializeSingleCourseAssignments(assignmentList);
-                    course.sortAssignments();
-                }
-                if (studentJson.containsKey("inbox") && ((LinkedHashMap<String,Object>)studentJson.get("inbox")).containsKey(period) && ((LinkedHashMap<String,Object>)studentJson.get("inbox")).keySet().size() != 0){
-                    LinkedHashMap<String, Object> assignmentList = (LinkedHashMap<String, Object>) ((LinkedHashMap<String, Object>) studentJson.get("inbox")).get(period);
-                    course.assignmentChanges = deserializeCourseInbox(assignmentList);
-                    course.sortAssignmentChanges();
-                    for(AssignmentChange ac : course.assignmentChanges){
-                        ac.course = course;
-                    }
-                }
-                returnStudent.courses.add(course);
-
-
+            //getting Assignments for this class
+            if (studentJson.containsKey("lastAssignments") && ((LinkedHashMap<String,Object>)studentJson.get("lastAssignments")).keySet().size() != 0) {
+                ArrayList<LinkedHashMap<String, Object>> assignmentList = (ArrayList<LinkedHashMap<String, Object>>) ((LinkedHashMap<String, Object>) studentJson.get("lastAssignments")).get(period);
+                course.assignments = deserializeSingleCourseAssignments(assignmentList);
+                course.sortAssignments();
             }
+            if (studentJson.containsKey("inbox") && ((LinkedHashMap<String,Object>)studentJson.get("inbox")).containsKey(period) && ((LinkedHashMap<String,Object>)studentJson.get("inbox")).keySet().size() != 0){
+                LinkedHashMap<String, Object> assignmentList = (LinkedHashMap<String, Object>) ((LinkedHashMap<String, Object>) studentJson.get("inbox")).get(period);
+                course.assignmentChanges = deserializeCourseInbox(assignmentList);
+                course.sortAssignmentChanges();
+                for(AssignmentChange ac : course.assignmentChanges){
+                    ac.course = course;
+                }
+            }
+            returnStudent.courses.add(course);
         }
         //returnStudent.calculateGPA();
         return returnStudent;
