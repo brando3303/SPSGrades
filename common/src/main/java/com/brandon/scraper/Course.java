@@ -90,12 +90,15 @@ public class Course {
     }
 
     public Double getLowestOverallGradeInbox(){
-        Double lowest = 1010.;
+        Double lowest = 10000.;
         for(AssignmentChange ac : assignmentChanges){
             //TODO handle a null lowest value
-            if(Double.parseDouble(ac.overallGradeBefore) < lowest && ac.shouldDisplay()){
+            if(ac.overallGradeBefore != null && Double.parseDouble(ac.overallGradeBefore) < lowest && ac.shouldDisplay()){
                 lowest = Double.parseDouble(ac.overallGradeBefore);
             }
+        }
+        if(lowest == 10000){
+            return -1.;
         }
         return lowest;
     }

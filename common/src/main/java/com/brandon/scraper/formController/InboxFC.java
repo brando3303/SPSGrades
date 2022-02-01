@@ -240,7 +240,8 @@ public class InboxFC extends FormController {
         Label returnLabel = new Label();
         returnLabel.setUIID("OverallGradeChange");
 
-        if (Double.parseDouble(course.gradePercent) == course.getLowestOverallGradeInbox()) {
+        log(course.getLowestOverallGradeInbox() + "");
+        if (course.gradePercent == null || Double.parseDouble(course.gradePercent) == course.getLowestOverallGradeInbox() || course.getLowestOverallGradeInbox() == -1) {
             returnLabel.setText(course.gradePercent + "%");
         }
         if (Double.parseDouble(course.gradePercent) > course.getLowestOverallGradeInbox()){

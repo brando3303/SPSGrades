@@ -111,6 +111,7 @@ public class ScraperServer {
         return createStudentFromMap(studentJson, incompleteStudent.getUsername(), incompleteStudent.getPassword());
     }
 
+    //the primary method which deserializes a Map of values to a Student
     private static Student createStudentFromMap(Map<String,Object> studentJson, String username, String password){
         Student returnStudent = new Student(username, password);
 
@@ -132,12 +133,16 @@ public class ScraperServer {
             LinkedHashMap<String, Object> courseMap = (LinkedHashMap<String, Object>) courses.get(period);
             course.courseName = (String) courseMap.get("courseName");
             course.frn = (String) courseMap.get("frn");
-            course.gradeLetter = (String) courseMap.get("gradeLetter");
-            if (course.gradeLetter == null)
+            if (courseMap.get("gradeLetter") == null) {
                 course.gradeLetter = "NA";
-            course.gradePercent = (String) courseMap.get("gradePercent");
-            if (course.gradePercent == null)
+            } else {
+                course.gradeLetter = (String) courseMap.get("gradeLetter");
+            }
+            if (courseMap.get("gradePercent") == null) {
                 course.gradePercent = "NA";
+            } else {
+                course.gradePercent = courseMap.get("gradePercent").toString();
+            }
             course.period = (String) courseMap.get("period");
             course.teacher = (String) courseMap.get("teacher");
 
