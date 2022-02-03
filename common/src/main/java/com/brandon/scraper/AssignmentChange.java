@@ -2,18 +2,18 @@ package com.brandon.scraper;
 
 public class AssignmentChange {
     public String assignmentChangeType;
-    public String assignmentName;
+    public String assignmentName = "assignment";
     public Double assignmentPoints; // note that points will be null if type == "modified", and pointsBefore/After will be null if type == "created"
     public Double assignmentPointsBefore;
     public Double assignmentPointsNow;
     public Double assignmentTotal;
-    public String courseName;
+    public String courseName = "Course";
     public boolean deleted;
     public String id;
-    public String overallGradeBefore;
-    public String overallGradeNow;
-    public Double time;
-    public String timeReadable;
+    public String overallGradeBefore = "NA";
+    public String overallGradeNow = "NA";
+    public Double time = 1643865717.;
+    public String timeReadable = "time";
 
     public Course course;
 

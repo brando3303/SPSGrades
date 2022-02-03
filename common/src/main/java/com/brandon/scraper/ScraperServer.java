@@ -147,7 +147,9 @@ public class ScraperServer {
             course.teacher = (String) courseMap.get("teacher");
 
             //getting Assignments for this class
-            if (studentJson.containsKey("lastAssignments") && ((LinkedHashMap<String,Object>)studentJson.get("lastAssignments")).keySet().size() != 0) {
+            if (studentJson.containsKey("lastAssignments") &&
+                    ((LinkedHashMap<String,Object>)studentJson.get("lastAssignments")).keySet().size() != 0 &&
+                    ((LinkedHashMap)studentJson.get("lastAssignments")).containsKey(period)) {
                 ArrayList<LinkedHashMap<String, Object>> assignmentList = (ArrayList<LinkedHashMap<String, Object>>) ((LinkedHashMap<String, Object>) studentJson.get("lastAssignments")).get(period);
                 course.assignments = deserializeSingleCourseAssignments(assignmentList);
                 course.sortAssignments();

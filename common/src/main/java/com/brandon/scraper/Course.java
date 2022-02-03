@@ -10,10 +10,10 @@ public class Course {
 
     public String courseName;
     public String frn;
-    public String gradeLetter;
-    public String gradePercent;
+    public String gradeLetter = "NA";
+    public String gradePercent = "NA";
     public String period;
-    public String teacher;
+    public String teacher = "teacher";
 
     public List<Assignment> assignments;
     public ArrayList<AssignmentChange> assignmentChanges;
