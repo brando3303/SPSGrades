@@ -32,6 +32,7 @@ public class ScraperServer {
         public void WhileLoadingRunnable(Student incompleteUser);
     }
 
+    private static final String GET_STATUS = "https://the-source-scraper.herokuapp.com/status";
     private static final String GET_USER = "https://the-source-scraper.herokuapp.com/get_user?username=USERNAME";
     private static final String DELETE_INBOX_ITEM = "https://the-source-scraper.herokuapp.com/delete_inbox_item";
     private static final String CREATE_USER = "https://the-source-scraper.herokuapp.com/create_user"; //requires username and password arguments (username & pwd)
@@ -276,5 +277,21 @@ public class ScraperServer {
         r.addArgument("deviceId", deviceId);
         r.addArgument("secret",SECRETKEY);
         NetworkManager.getInstance().addToQueue(r);
+    }
+
+    public static boolean serverStatus(){
+        SilentConnectionRequest r = new SilentConnectionRequest();
+        r.setUrl(GET_STATUS);
+        r.setPost(false);
+        NetworkManager.getInstance().addToQueueAndWait(r);
+
+        try {
+            Map<String,Object> data = new JSONParser().parseJSON(new InputStreamReader(new ByteArrayInputStream(r.getResponseData()), "UTF-8"));
+            return ((String)data.get("broken")).equals("true");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+
     }
 }

@@ -2,10 +2,9 @@ package com.brandon.scraper;
 
 import com.brandon.scraper.formController.*;
 import com.codename1.components.InfiniteProgress;
+import com.codename1.components.SpanLabel;
 import com.codename1.io.ConnectionRequest;
 import com.codename1.io.Storage;
-import com.codename1.l10n.ParseException;
-import com.codename1.l10n.SimpleDateFormat;
 import com.codename1.push.Push;
 import com.codename1.push.PushCallback;
 import com.codename1.system.Lifecycle;
@@ -22,7 +21,7 @@ import static com.codename1.ui.CN.log;
 //needs to implement PushCallback
 public class Main extends Lifecycle implements PushCallback {
 
-    private final double minsBeforeReload = 60; //mins
+    private final double minsBeforeReload = 30; //mins
 
     //the Form Controllers for this app
     private GradesFC gradesFC = new GradesFC(this);
@@ -46,6 +45,30 @@ public class Main extends Lifecycle implements PushCallback {
     public void start(){
         ConnectionRequest.setHandleErrorCodesInGlobalErrorHandler(false);
 
+        //if the servers are "broken", display error message
+        if(Connectivity.isConnected() && ScraperServer.serverStatus()){
+            Form loading= new Form();
+            log("the servers are broken!");
+            Dialog d = new Dialog("Sorry!.");
+            d.add(new SpanLabel("Our servers are down right now."));
+            Button retryButton = new Button("retry");
+            retryButton.addActionListener(e -> {
+                if (ScraperServer.serverStatus()) {
+                    log("retry was clicked, so loader was shown");
+                    loading.show();
+                    d.show();
+                    return;
+                }
+                start();
+            });
+
+            d.add(retryButton);
+            d.show();
+
+            return;
+        }
+
+        log("got past server catch");
         if(!started){
             runApp();
             return;
@@ -58,20 +81,13 @@ public class Main extends Lifecycle implements PushCallback {
 
     @Override
     public void runApp() {
-
-        try {
-            log(new SimpleDateFormat("yyyy-MM-dd").parse("2021-11-22").getTime() + "");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
         Form loading = new Form();
         loading.show();
 
+
+
         Display.getInstance().registerPush();
         Display.getInstance().lockOrientation(true);
-        //encrypts all data stored, and is just simple but effective layer of protect from who knows
-        //EncryptedStorage.install("BrandonEvan");
 
         //allows this class to act as a singleton
         mainInstance = this;
