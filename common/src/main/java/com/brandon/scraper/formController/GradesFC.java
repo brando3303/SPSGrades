@@ -8,8 +8,6 @@ import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.table.TableLayout;
 import org.littlemonkey.connectivity.Connectivity;
 
-import static com.codename1.ui.CN.log;
-
 public class GradesFC extends FormController{
     private Button inboxButton;
 
@@ -31,8 +29,10 @@ public class GradesFC extends FormController{
 
         gradesForm.getToolbar().addMaterialCommandToSideMenu("SignOut",
                 FontImage.MATERIAL_LOGOUT, 4, e -> signOut());
-        gradesForm.getToolbar().addMaterialCommandToSideMenu("Settings",
-                FontImage.MATERIAL_SETTINGS, 4, e -> this.getApp().getSettingsFC().start().show());
+
+        //here lies settings, RIP
+        //gradesForm.getToolbar().addMaterialCommandToSideMenu("Settings",
+        //        FontImage.MATERIAL_SETTINGS, 4, e -> this.getApp().getSettingsFC().start().show());
 
         inboxButton = new Button("inbox");
         inboxButton.setUIID("InboxIconBadge");
