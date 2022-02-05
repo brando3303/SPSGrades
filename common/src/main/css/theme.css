@@ -25,11 +25,9 @@ Button {
 
 /** Style for App Title Bar Text */
 Title {
-
-    font-size: 3mm;
-    font-family: "native:MainBlack";
+    font-size: 3.5mm;
     color: white;
-    margin: 2.3mm 0 0 0;
+    margin: 1.5mm 0 0.5mm 0;*/
 }
 
 TitleArea{
