@@ -60,7 +60,7 @@ public class SignInFC extends FormController{
 
         //add a toolbar command which gives the user information about password security
         signInForm.getToolbar().addMaterialCommandToLeftBar("Security", FontImage.MATERIAL_HELP, 4, e -> Dialog.show("Information Security",
-                "All user data is encrypted and stored in a secure database. When a user is no longer active or signs out, all data is deleted.", "OK", null));
+                "All user data is encrypted and stored in a secure database. When a user is no longer active or signs out, all data is deleted. See our Privacy Policy for more information: https://the-source-scraper.herokuapp.com/privacypolicy", "OK", null));
 
         return this.form;
     }
