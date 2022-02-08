@@ -290,8 +290,8 @@ public class ScraperServer {
             return ((String)data.get("broken")).equals("true");
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
-        return false;
 
     }
 }
