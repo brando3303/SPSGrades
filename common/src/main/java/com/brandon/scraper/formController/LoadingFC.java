@@ -1,12 +1,11 @@
 package com.brandon.scraper.formController;
 
 import com.brandon.scraper.Main;
-import com.codename1.ui.Container;
-import com.codename1.ui.Form;
-import com.codename1.ui.Image;
-import com.codename1.ui.Label;
+import com.codename1.ui.*;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.table.TableLayout;
+
+import static com.codename1.ui.CN.log;
 
 public class LoadingFC extends FormController{
 
@@ -58,6 +57,10 @@ public class LoadingFC extends FormController{
         this.form.show();
     }
 
+    public void addProgress(int progress){
+        setProgress(percent+progress);
+    }
+
     public int getPercent(){
         return this.percent;
     }
@@ -70,5 +73,21 @@ public class LoadingFC extends FormController{
     public void setImage(Image image){
         displayImage = image;
 
+    }
+
+    public void runTimed(long totalMs, int intervals){
+        Thread execute = new Thread(() -> {
+            while(Display.getInstance().getCurrent().equals(this.form) && percent+100/intervals < 100){
+                addProgress(100/intervals);
+                log("updated bar");
+                this.show();
+                try {
+                    Thread.sleep(totalMs/intervals);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        execute.start();
     }
 }

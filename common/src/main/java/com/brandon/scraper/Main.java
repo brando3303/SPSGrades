@@ -44,10 +44,15 @@ public class Main extends Lifecycle implements PushCallback {
     @Override
     public void start(){
         ConnectionRequest.setHandleErrorCodesInGlobalErrorHandler(false);
+        loadingFC.start();
+        loadingFC.setMessage("Connecting To Servers...");
+        loadingFC.show();
+        loadingFC.runTimed(30000,20);
+
 
         //if the servers are "broken", display error message
         if(Connectivity.isConnected() && ScraperServer.serverStatus()){
-            Form loading= new Form();
+
             log("the servers are broken!");
             Dialog d = new Dialog("Sorry!.");
             d.add(new SpanLabel("Our servers are down right now."));
@@ -55,7 +60,7 @@ public class Main extends Lifecycle implements PushCallback {
             retryButton.addActionListener(e -> {
                 if (ScraperServer.serverStatus()) {
                     log("retry was clicked, so loader was shown");
-                    loading.show();
+                    loadingFC.show();
                     d.show();
                     return;
                 }
@@ -106,7 +111,8 @@ public class Main extends Lifecycle implements PushCallback {
             if (!Connectivity.isConnected()) {
 
                 //continually show this dialog until the person is actually connected to the internet
-                Dialog d = new Dialog("You are disconnected from the internet.");
+                Dialog d = new Dialog("Oops!");
+                d.addComponent(new SpanLabel("You are disconnected from the internet."));
                 Button retryButton = new Button("retry");
                 retryButton.addActionListener(e -> {
                     if (!Connectivity.isConnected()) {
@@ -136,6 +142,7 @@ public class Main extends Lifecycle implements PushCallback {
         loadingFC.start();
         loadingFC.setMessage("Loading User...");
         loadingFC.show();
+        loadingFC.runTimed(40000,19);
         if (!Connectivity.isConnected()) {
             Dialog.show("You are disconnected from the internet.", "Reconnect to the internet and try again", "Ok", null);
 

@@ -86,6 +86,7 @@ public class SignInFC extends FormController{
         lfc.start();
         lfc.setMessage("Loading New User");
         lfc.show();
+        lfc.runTimed(40000,19);
 
         try {
             app.setCurrentUser(ScraperServer.createNewUser(user, pass, loadingStudent -> {
