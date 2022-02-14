@@ -45,18 +45,10 @@ public class SignInFC extends FormController{
         passwordField.setDoneListener(e -> newSignInEnterAction(usernameField.getText(), passwordField.getText()));
 
 
-        signInForm.add(new Label("Sign in using your SPS Source login."));
+        signInForm.add(new SpanLabel("Sign in using your SPS Source login. For example: 1ABStudent"));
         signInForm.add(usernameField);
         signInForm.add(passwordField);
         signInForm.add(signInButton);
-
-        //doesn't work anymore, became unuseful after implementing inbox and assignments which required separate get requests
-        //signInFormReturn.add(testButton);
-
-        //add hint for user if they aren't connected to the internet
-        if (!Connectivity.isConnected()) {
-            signInForm.add(new SpanLabel("You are likely unconnected to the internet and will be unable to sign in."));
-        }
 
         //add a toolbar command which gives the user information about password security
         signInForm.getToolbar().addMaterialCommandToLeftBar("Security", FontImage.MATERIAL_HELP, 4, e -> Dialog.show("Information Security",
