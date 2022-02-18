@@ -241,10 +241,11 @@ public class InboxFC extends FormController {
         returnLabel.setUIID("OverallGradeChange");
 
         log(course.getLowestOverallGradeInbox() + "");
-        if (course.gradePercent == null || Double.parseDouble(course.gradePercent) == course.getLowestOverallGradeInbox() || course.getLowestOverallGradeInbox() == -1) {
+        log(course.gradePercent);
+        if (course.gradePercent.equals("NA") || Double.parseDouble(course.gradePercent) == course.getLowestOverallGradeInbox() || course.getLowestOverallGradeInbox() == -1) {
             returnLabel.setText(course.gradePercent + "%");
         }
-        if (Double.parseDouble(course.gradePercent) > course.getLowestOverallGradeInbox()){
+        else if (Double.parseDouble(course.gradePercent) > course.getLowestOverallGradeInbox()){
             returnLabel.setText(course.gradePercent + "%(▲" + Utils.intify(Math.abs(Double.parseDouble(course.gradePercent) - course.getLowestOverallGradeInbox())) + "%)");
             returnLabel.getAllStyles().setFgColor(Grade.A.getColor(), true);
         }
