@@ -21,7 +21,7 @@ import static com.codename1.ui.CN.log;
 //needs to implement PushCallback
 public class Main extends Lifecycle implements PushCallback {
 
-    private final double minsBeforeReload = 30; //mins
+    private final double minsBeforeReload = 1; //mins
 
     //the Form Controllers for this app
     private GradesFC gradesFC = new GradesFC(this);
@@ -44,42 +44,18 @@ public class Main extends Lifecycle implements PushCallback {
     @Override
     public void start(){
         ConnectionRequest.setHandleErrorCodesInGlobalErrorHandler(false);
-        loadingFC.start();
-        loadingFC.setMessage("Connecting To Servers...");
-        loadingFC.show();
-        loadingFC.runTimed(30000,20);
 
-
-        //if the servers are "broken", display error message
-        if(Connectivity.isConnected() && ScraperServer.serverStatus()){
-
-            log("the servers are broken!");
-            Dialog d = new Dialog("Sorry!.");
-            d.add(new SpanLabel("Our servers are down right now."));
-            Button retryButton = new Button("retry");
-            retryButton.addActionListener(e -> {
-                if (ScraperServer.serverStatus()) {
-                    log("retry was clicked, so loader was shown");
-                    loadingFC.show();
-                    d.show();
-                    return;
-                }
-                start();
-            });
-
-            d.add(retryButton);
-            d.show();
-
-            return;
-        }
-
-        log("got past server catch");
         if(!started){
+            log("user had not started the app yet");
+            serverCatch();
             runApp();
             return;
         } else if(started && !signedIn){
+            log("user already started the app but is not signed in");
+            serverCatch();
             signInFC.show();
         } else if(started && signedIn && (new Date().getTime()-lastTimeInFocus) >= minsBeforeReload * 60 * 1000){
+            log("its been " + minsBeforeReload * 60 * 1000 + " since last start up");
             signInExistingUser(currentUser.getUsername(),currentUser.getPassword(),currentUser.getSettings());
         }
     }
@@ -266,5 +242,37 @@ public class Main extends Lifecycle implements PushCallback {
     @Override
     public void pushRegistrationError(String s, int i) {
 
+    }
+    public void serverCatch(){
+        loadingFC.start();
+        loadingFC.setMessage("Connecting To Servers...");
+        loadingFC.show();
+        loadingFC.runTimed(30000,20);
+
+
+        //if the servers are "broken", display error message
+        if(Connectivity.isConnected() && ScraperServer.serverStatus()){
+
+            log("the servers are broken!");
+            Dialog d = new Dialog("Sorry!.");
+            d.add(new SpanLabel("Our servers are down right now."));
+            Button retryButton = new Button("retry");
+            retryButton.addActionListener(e -> {
+                if (ScraperServer.serverStatus()) {
+                    log("retry was clicked, so loader was shown");
+                    loadingFC.show();
+                    d.show();
+                    return;
+                }
+                start();
+            });
+
+            d.add(retryButton);
+            d.show();
+
+            return;
+        }
+
+        log("got past server catch");
     }
 }
