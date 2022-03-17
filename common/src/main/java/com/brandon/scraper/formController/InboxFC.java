@@ -62,7 +62,7 @@ public class InboxFC extends FormController {
                         }
                     };
 
-                    Dialog.show("Clear Inbox?","You can't undo this", ok, new Command("Cancel"));
+                    Dialog.show("Clear Inbox?","You can't undo this", new Command("Cancel"), ok);
 
                 });
 

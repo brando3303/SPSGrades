@@ -1,6 +1,7 @@
 package com.brandon.scraper.formController;
 
 import com.brandon.scraper.*;
+import com.codename1.components.SpanLabel;
 import com.codename1.io.Storage;
 import com.codename1.ui.*;
 import com.codename1.ui.layouts.BorderLayout;
@@ -29,6 +30,9 @@ public class GradesFC extends FormController{
 
         gradesForm.getToolbar().addMaterialCommandToSideMenu("SignOut",
                 FontImage.MATERIAL_LOGOUT, 4, e -> signOut());
+
+        //*Advertisment*
+        gradesForm.getToolbar().addComponentToLeftSideMenu(new SpanLabel("Sponsored by @roosevelt_cookie_mafia"));
 
         //here lies settings, RIP
         //gradesForm.getToolbar().addMaterialCommandToSideMenu("Settings",
