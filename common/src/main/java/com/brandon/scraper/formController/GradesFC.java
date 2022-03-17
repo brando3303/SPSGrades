@@ -32,7 +32,10 @@ public class GradesFC extends FormController{
                 FontImage.MATERIAL_LOGOUT, 4, e -> signOut());
 
         //*Advertisment*
-        gradesForm.getToolbar().addComponentToLeftSideMenu(new SpanLabel("Sponsored by @roosevelt_cookie_mafia"));
+        SpanLabel sl = new SpanLabel("Sponsored by @roosevelt_cookie_mafia");
+        sl.setUIID("GradePercentV");
+        sl.setTextUIID("Percent");
+        gradesForm.getToolbar().addComponentToLeftSideMenu(sl);
 
         //here lies settings, RIP
         //gradesForm.getToolbar().addMaterialCommandToSideMenu("Settings",
