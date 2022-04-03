@@ -9,6 +9,8 @@ import com.codename1.ui.layouts.BoxLayout;
 import com.codename1.ui.table.TableLayout;
 import org.littlemonkey.connectivity.Connectivity;
 
+import static com.codename1.ui.CN.log;
+
 public class GradesFC extends FormController{
     private Button inboxButton;
 
@@ -23,6 +25,8 @@ public class GradesFC extends FormController{
 
     private Form createGradesForm() {
         Student currentUser = this.getApp().getCurrentUser();
+        String gpa = ScraperServer.getGPA(this.getApp().getCurrentUser().getUsername());
+        log(gpa + "");
 
         Form gradesForm = new Form("Grades", BoxLayout.y());
         this.form = gradesForm;
@@ -104,6 +108,13 @@ public class GradesFC extends FormController{
             }
             gradesForm.add(classTable);
         }
+
+        Container gpaCont = new Container();
+        gpaCont.setUIID("GradeGrid");
+        Label gpaLabel = new Label("GPA: " + gpa );
+        gpaLabel.setUIID("CourseName");
+        gpaCont.add(gpaLabel);
+        gradesForm.add(gpaCont);
         return gradesForm;
     }
 

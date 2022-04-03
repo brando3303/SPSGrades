@@ -39,6 +39,7 @@ public class ScraperServer {
     private static final String LOAD_USER_ASSIGNMENTS = "https://the-source-scraper.herokuapp.com/load_user_assignments"; //requires username and password arguments (username & pwd)
     private static final String DEACTIVATE_USER = "https://the-source-scraper.herokuapp.com/deactivate_user"; //requires a username argument
     private static final String UPDATE_USER = "https://the-source-scraper.herokuapp.com/update_user"; //requires username arguments (username)
+    private static final String GET_GPA = "https://the-source-scraper.herokuapp.com/get_gpa"; //requires a username
     private static final String SECRETKEY = "BEipdUg9yp";
 
 
@@ -291,6 +292,24 @@ public class ScraperServer {
         } catch (IOException e) {
             e.printStackTrace();
             return false;
+        }
+
+    }
+
+    public static String getGPA(String username){
+        SilentConnectionRequest r = new SilentConnectionRequest();
+        r.setUrl(GET_GPA);
+        r.setPost(true);
+        r.addArgument("username", username);
+        r.addArgument("secret", SECRETKEY);
+        NetworkManager.getInstance().addToQueueAndWait(r);
+
+        try {
+            Map<String,Object> data = new JSONParser().parseJSON(new InputStreamReader(new ByteArrayInputStream(r.getResponseData()), "UTF-8"));
+            return (Double)data.get("gpa") + " ";
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "NA";
         }
 
     }
